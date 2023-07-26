@@ -11,7 +11,7 @@ const Test = () => {
       fetchGif();
    })
 
-   return <h1>Hello</h1>
+   return <img src="https://s12.gifyu.com/images/ScHN6.gif" alt=""/>
 }
 
 export default Test;
