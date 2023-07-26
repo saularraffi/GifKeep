@@ -1,0 +1,1 @@
+Place any utility classes or functions responsible for making API calls or handling external services in this folder.
