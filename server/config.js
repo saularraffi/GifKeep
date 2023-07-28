@@ -3,7 +3,7 @@ const dbPassword = process.env.DB_PASS
 
 const dev = {
     app: {
-        port: parseInt(process.env.DEV_APP_PORT) || 3000,
+        port: parseInt(process.env.DEV_APP_PORT) || 8080,
         host: "0.0.0.0"
     },
     db: {
