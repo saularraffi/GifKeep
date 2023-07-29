@@ -1,5 +1,5 @@
 import { React } from 'react'
-import { Container, Typography, Paper } from '@material-ui/core'
+import { Container, Typography, Paper } from '@mui/material'
 
 const GifNoteTile = ({note, gifUrl}) => {
     const styles = {
