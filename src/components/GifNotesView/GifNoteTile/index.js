@@ -11,7 +11,6 @@ const GifNoteTile = ({note, gifUrl}) => {
             width: "100%",
         },
         typography: {
-            fontFamily: "Bree Serif",
             fontSize: "20px",
             paddingTop: "15px",
             paddingBottom: "15px"
