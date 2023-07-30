@@ -1,7 +1,7 @@
 import { React, useEffect, useState } from 'react'
 import { getGifNotes } from '../../services/gifyuApi'
 import GifNoteTile from './GifNoteTile'
-import { Box, Container, Grid } from '@material-ui/core'
+import { Container, Grid } from '@mui/material'
 
 
 const GifNoteView = () => {
