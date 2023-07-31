@@ -8,8 +8,8 @@ const GifNoteView = () => {
     const [gifNotes, setGifNotes] = useState([]);
 
     useEffect(() => {
-        getGifNotes().then(data => {
-            setGifNotes(data);
+        getGifNotes().then(res => {
+            setGifNotes(res.data);
         });
     }, [])
 
