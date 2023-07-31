@@ -4,14 +4,14 @@ import GifNoteTile from './GifNoteTile'
 import { Container, Grid } from '@mui/material'
 
 
-const GifNoteView = () => {
+const GifNoteView = ({ sharedState }) => {
     const [gifNotes, setGifNotes] = useState([]);
 
     useEffect(() => {
         getGifNotes().then(res => {
             setGifNotes(res.data);
         });
-    }, [])
+    }, [sharedState])
 
     return (
         <Container style={{maxWidth: "100rem"}}>
