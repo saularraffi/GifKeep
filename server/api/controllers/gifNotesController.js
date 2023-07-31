@@ -18,9 +18,9 @@ router.get(endpoint, async (req, res) => {
 })
 
 router.post(endpoint, async (req, res) => {
-    const note = req.query.note;
-    const category = req.query.category;
-    const gifUrl = req.query.gifUrl;
+    const note = req.body.note;
+    const category = req.body.category;
+    const gifUrl = req.body.gifUrl;
 
     gifNotesService.saveGifNote(note, category, gifUrl)
     .then(gifNote => {
