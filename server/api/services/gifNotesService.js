@@ -21,13 +21,4 @@ exports.saveGifNote = async (note, category, gifUrl) => {
     } catch (error) {
         throw error;
     }
-    
-
-    // gifNote.save()
-    // .then(savedGifNote => {
-    //     return savedGifNote;
-    // })
-    // .catch(err => {
-    //     return err;
-    // });
 }
