@@ -49,6 +49,7 @@ const AddGifNotePopup = forwardRef((props, ref) => {
         postGifNote(description, category, gifUrl).then(res => {
             props.updateSharedState(res.data);
         }).catch(err => {
+            props.updateSharedState(err);
             console.log(err);
         })
         handleClose()
