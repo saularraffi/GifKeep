@@ -34,4 +34,19 @@ router.post(endpoint, async (req, res) => {
     });
 })
 
+router.delete(endpoint, async (req, res) => {
+    const id = req.query.id;
+
+    gifNotesService.deleteGifNote(id)
+    .then(() => {
+        res.status(200);
+        res.send("OK");
+    })
+    .catch(err => {
+        console.log(`[-] Error deleting GIF Note with id ${id}\n${err}`);
+        res.status(500);
+        res.send(`Error deleting GIF Note with id ${id}`);
+    })
+})
+
 module.exports = router
