@@ -32,9 +32,9 @@ const GifNoteView = ({ sharedState }) => {
 
     const AlertMessage = () => {
         if (showSuccessAlert) {
-            return <Alert severity="success" sx={styles.alert}>This is a success message!</Alert>
+            return <Alert severity="success" sx={styles.alert}><strong>Successfully</strong> added GIF Note</Alert>
         } else if (showErrorAlert) {
-            return <Alert severity="error" sx={styles.alert}>This is an error message!</Alert>
+            return <Alert severity="error" sx={styles.alert}><strong>Failed</strong> to add GIF Note!</Alert>
         }
     }
 
