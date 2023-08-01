@@ -23,3 +23,12 @@ export function postGifNote(description, category, gifUrl) {
         return error; 
     }
 }
+
+export function deleteGifNote(id) {
+    try {
+        const response = axios.delete(`${baseUrl}?id=${id}`)
+        return response;
+    } catch (error) {
+        return error;
+    }
+}

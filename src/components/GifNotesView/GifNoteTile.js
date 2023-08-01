@@ -3,6 +3,7 @@ import { Container, Typography, Paper, IconButton, Box, Grid } from '@mui/materi
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { deleteGifNote } from '../../services/gifyuApi';
 
 const styles = {
     root: {
@@ -16,7 +17,7 @@ const styles = {
     }
 }
 
-const GifNoteTile = ({note, gifUrl}) => {
+const GifNoteTile = ({id, note, gifUrl}) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     
@@ -29,6 +30,12 @@ const GifNoteTile = ({note, gifUrl}) => {
     };
 
     const handleDelete = () => {
+        deleteGifNote(id).then(res => {
+            console.log(res);
+        }).catch(err => {
+            console.log("error")
+            console.log(err)
+        });
         handleClose();
     };
 

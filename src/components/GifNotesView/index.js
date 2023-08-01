@@ -46,6 +46,7 @@ const GifNoteView = ({ sharedState }) => {
                     <Grid key={gifNote._id} item xs={12} sm={6} md={4} lg={3}>
                         <GifNoteTile
                             key={gifNote._id}
+                            id={gifNote._id}
                             note={gifNote.note} 
                             gifUrl={gifNote.gifUrl}
                         />
