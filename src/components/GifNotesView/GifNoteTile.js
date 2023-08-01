@@ -17,7 +17,7 @@ const styles = {
     }
 }
 
-const GifNoteTile = ({id, note, gifUrl, setSharedState}) => {
+const GifNoteTile = ({id, note, category, gifUrl, setSharedState, openPopup}) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     
@@ -47,12 +47,19 @@ const GifNoteTile = ({id, note, gifUrl, setSharedState}) => {
         handleClose();
     };
 
+    const handleEdit = () => {
+        openPopup(note, category, gifUrl);
+    };
+
     const MenuOptions = () => {
         return (
             <>
                 <MenuItem onClick={handleDelete}>
                     <Typography sx={{ fontFamily: "Kanit", color: "red" }}>DELETE</Typography>
-                </MenuItem>       
+                </MenuItem>
+                <MenuItem onClick={handleEdit}>
+                    <Typography sx={{ fontFamily: "Kanit", color: "blue" }}>EDIT</Typography>
+                </MenuItem>  
             </>
         )
     };

@@ -33,7 +33,13 @@ const AddGifNotePopup = forwardRef((props, ref) => {
     const [gifUrl, setGifUrl] = useState("");
     const [open, setOpen] = useState(false);
     
-    const handleOpen = () => setOpen(true);
+    const handleOpen = (description, category, gifUrl) => {
+        setDescription(description);
+        setCategory(category);
+        setGifUrl(gifUrl);
+        setOpen(true);
+    }
+
     const handleClose = () => {
         setDescription("");
         setCategory("");

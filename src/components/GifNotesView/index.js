@@ -1,7 +1,8 @@
-import { React, useEffect, useState } from 'react'
+import { React, useEffect, useState, useRef } from 'react'
 import { getGifNotes } from '../../services/gifyuApi'
 import GifNoteTile from './GifNoteTile'
 import { Container, Grid, Alert } from '@mui/material'
+import AddGifNotePopup from '../TopAppBar/AddGifNotePopup'
 
 const styles = {
     alert: {
@@ -14,6 +15,13 @@ const GifNoteView = ({ sharedState, setSharedState }) => {
     const [gifNotes, setGifNotes] = useState([]);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const popupRef = useRef();
+
+    const openPopup = (description, category, gifUrl) => {
+        if (popupRef.current) {
+            popupRef.current.handleOpen(description, category, gifUrl);
+        }
+    };
 
     useEffect(() => {
         if (sharedState != null) {
@@ -54,6 +62,7 @@ const GifNoteView = ({ sharedState, setSharedState }) => {
     return (
         <Container style={{maxWidth: "100rem"}}>
             <AlertMessage />
+            <AddGifNotePopup ref={popupRef}/>
             <Grid container spacing={2}>
                 {gifNotes.map(gifNote => (
                     <Grid key={gifNote._id} item xs={12} sm={6} md={4} lg={3}>
@@ -61,8 +70,10 @@ const GifNoteView = ({ sharedState, setSharedState }) => {
                             key={gifNote._id}
                             id={gifNote._id}
                             note={gifNote.note} 
+                            category={gifNote.category}
                             gifUrl={gifNote.gifUrl}
                             setSharedState={setSharedState}
+                            openPopup={openPopup}
                         />
                     </Grid>
                 ))}

@@ -12,7 +12,7 @@ const TopAppBar = ({ onStateChange }) => {
 
     const openPopup = () => {
         if (popupRef.current) {
-            popupRef.current.handleOpen();
+            popupRef.current.handleOpen("", "", "");
         }
     };
 
