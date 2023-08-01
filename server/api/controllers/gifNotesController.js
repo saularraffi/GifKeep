@@ -40,7 +40,7 @@ router.delete(endpoint, async (req, res) => {
     gifNotesService.deleteGifNote(id)
     .then(() => {
         res.status(200);
-        res.send("OK");
+        res.send(id);
     })
     .catch(err => {
         console.log(`[-] Error deleting GIF Note with id ${id}\n${err}`);

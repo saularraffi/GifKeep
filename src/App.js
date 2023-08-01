@@ -11,11 +11,12 @@ function App() {
   const handleStateChange = (newState) => {
     setSharedState(newState);
   };
+
   return (
     <>
       <ThemeProvider theme={theme}>
         <TopAppBar onStateChange={handleStateChange} />
-        <GifNotesView sharedState={sharedState} />
+        <GifNotesView sharedState={sharedState} setSharedState={setSharedState} />
       </ThemeProvider>
     </>
   );

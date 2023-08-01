@@ -17,7 +17,7 @@ const styles = {
     }
 }
 
-const GifNoteTile = ({id, note, gifUrl}) => {
+const GifNoteTile = ({id, note, gifUrl, setSharedState}) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     
@@ -31,9 +31,17 @@ const GifNoteTile = ({id, note, gifUrl}) => {
 
     const handleDelete = () => {
         deleteGifNote(id).then(res => {
-            console.log(res);
+            setSharedState({
+                id: res,
+                action: "DELETE",
+                status: "SUCCESS"
+            });
         }).catch(err => {
-            console.log("error")
+            setSharedState({
+                error: err,
+                action: "DELETE",
+                status: "FAILED"
+            });
             console.log(err)
         });
         handleClose();

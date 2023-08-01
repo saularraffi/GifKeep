@@ -10,19 +10,19 @@ const styles = {
     }
 }
 
-const GifNoteView = ({ sharedState }) => {
+const GifNoteView = ({ sharedState, setSharedState }) => {
     const [gifNotes, setGifNotes] = useState([]);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
 
     useEffect(() => {
         if (sharedState != null) {
-            if (sharedState.constructor.name === "AxiosError") {
-                setShowErrorAlert(true);
-                setShowSuccessAlert(false);
-            } else {
+            if (sharedState.status === "SUCCESS") {
                 setShowErrorAlert(false);
                 setShowSuccessAlert(true);
+            } else {
+                setShowErrorAlert(true);
+                setShowSuccessAlert(false);
             }
         }
         getGifNotes().then(res => {
@@ -31,10 +31,23 @@ const GifNoteView = ({ sharedState }) => {
     }, [sharedState])
 
     const AlertMessage = () => {
+        const successfulAdd = <Alert severity="success" sx={styles.alert}><strong>Successfully</strong> added GIF Note</Alert>;
+        const failedAdd = <Alert severity="error" sx={styles.alert}><strong>Failed</strong> to add GIF Note!</Alert>
+        const successfulDelete = <Alert severity="success" sx={styles.alert}><strong>Successfully</strong> deleted GIF Note</Alert>;
+        const failedDelete = <Alert severity="error" sx={styles.alert}><strong>Failed</strong> to delete GIF Note!</Alert>
+
         if (showSuccessAlert) {
-            return <Alert severity="success" sx={styles.alert}><strong>Successfully</strong> added GIF Note</Alert>
+            if (sharedState.action === "ADD") {
+                return successfulAdd;
+            } else {
+                return successfulDelete;
+            }
         } else if (showErrorAlert) {
-            return <Alert severity="error" sx={styles.alert}><strong>Failed</strong> to add GIF Note!</Alert>
+            if (sharedState.action === "ADD") {
+                return failedAdd;
+            } else {
+                return failedDelete;
+            }
         }
     }
 
@@ -49,6 +62,7 @@ const GifNoteView = ({ sharedState }) => {
                             id={gifNote._id}
                             note={gifNote.note} 
                             gifUrl={gifNote.gifUrl}
+                            setSharedState={setSharedState}
                         />
                     </Grid>
                 ))}
