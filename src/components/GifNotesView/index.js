@@ -11,7 +11,7 @@ const styles = {
     }
 }
 
-const GifNoteView = ({ sharedState, setSharedState }) => {
+const GifNoteView = ({ sharedPopupState, setSharedPopupState }) => {
     const [gifNotes, setGifNotes] = useState([]);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -24,8 +24,8 @@ const GifNoteView = ({ sharedState, setSharedState }) => {
     };
 
     useEffect(() => {
-        if (sharedState != null) {
-            if (sharedState.status === "SUCCESS") {
+        if (sharedPopupState != null) {
+            if (sharedPopupState.status === "SUCCESS") {
                 setShowErrorAlert(false);
                 setShowSuccessAlert(true);
             } else {
@@ -36,7 +36,7 @@ const GifNoteView = ({ sharedState, setSharedState }) => {
         getGifNotes().then(res => {
             setGifNotes(res.data);
         });
-    }, [sharedState])
+    }, [sharedPopupState])
 
     const AlertMessage = () => {
         const successfulAdd = <Alert severity="success" sx={styles.alert}><strong>Successfully</strong> added GIF Note</Alert>;
@@ -47,17 +47,17 @@ const GifNoteView = ({ sharedState, setSharedState }) => {
         const failedUpdate = <Alert severity="error" sx={styles.alert}><strong>Failed</strong> to updated GIF Note!</Alert>
 
         if (showSuccessAlert) {
-            if (sharedState.action === "ADD") {
+            if (sharedPopupState.action === "ADD") {
                 return successfulAdd;
-            } else if (sharedState.action === "DELETE") {
+            } else if (sharedPopupState.action === "DELETE") {
                 return successfulDelete;
             } else {
                 return successfulUpdate;
             }
         } else if (showErrorAlert) {
-            if (sharedState.action === "ADD") {
+            if (sharedPopupState.action === "ADD") {
                 return failedAdd;
-            } else if (sharedState.action === "DELETE") {
+            } else if (sharedPopupState.action === "DELETE") {
                 return failedDelete;
             } else {
                 return failedUpdate;
@@ -68,7 +68,7 @@ const GifNoteView = ({ sharedState, setSharedState }) => {
     return (
         <Container style={{maxWidth: "100rem"}}>
             <AlertMessage />
-            <AddEditGifNotePopup ref={popupRef} setSharedState={setSharedState} mode={"UPDATE"}/>
+            <AddEditGifNotePopup ref={popupRef} setSharedPopupState={setSharedPopupState} mode={"UPDATE"}/>
             <Grid container spacing={2}>
                 {gifNotes.map(gifNote => (
                     <Grid key={gifNote._id} item xs={12} sm={6} md={4} lg={3}>
@@ -78,7 +78,7 @@ const GifNoteView = ({ sharedState, setSharedState }) => {
                             note={gifNote.note} 
                             category={gifNote.category}
                             gifUrl={gifNote.gifUrl}
-                            setSharedState={setSharedState}
+                            setSharedPopupState={setSharedPopupState}
                             openPopup={openPopup}
                         />
                     </Grid>

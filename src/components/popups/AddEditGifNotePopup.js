@@ -28,7 +28,7 @@ const style = {
     }
 };
 
-const AddGifNotePopup = forwardRef(({setSharedState, mode}, ref) => {
+const AddGifNotePopup = forwardRef(({setSharedPopupState, mode}, ref) => {
     const [id, setId] = useState("");
     const [description, setDescription] = useState("");
     const [category, setCategory] = useState("");
@@ -56,13 +56,13 @@ const AddGifNotePopup = forwardRef(({setSharedState, mode}, ref) => {
 
     const addGifNote = () => {
         postGifNote(description, category, gifUrl).then(res => {
-            setSharedState({
+            setSharedPopupState({
                 id: res.data._id,
                 action: "ADD",
                 status: "SUCCESS"
             });
         }).catch(err => {
-            setSharedState({
+            setSharedPopupState({
                 error: err,
                 action: "ADD",
                 status: "FAILED"
@@ -74,13 +74,13 @@ const AddGifNotePopup = forwardRef(({setSharedState, mode}, ref) => {
 
     const updateGifNote = () => {
         putGifNote(id, description, category, gifUrl).then(res => {
-            setSharedState({
+            setSharedPopupState({
                 id: res.data._id,
                 action: "UPDATE",
                 status: "SUCCESS"
             });
         }).catch(err => {
-            setSharedState({
+            setSharedPopupState({
                 error: err,
                 action: "UPDATE",
                 status: "FAILED"
