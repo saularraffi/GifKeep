@@ -48,7 +48,7 @@ const GifNoteTile = ({id, note, category, gifUrl, setSharedState, openPopup}) =>
     };
 
     const handleEdit = () => {
-        openPopup(note, category, gifUrl);
+        openPopup(id, note, category, gifUrl);
     };
 
     const MenuOptions = () => {

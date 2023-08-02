@@ -40,7 +40,7 @@ const TopAppBar = ({ onStateChange }) => {
 
     return (
         <Box sx={{ flexGrow: 1, marginBottom: "50px" }}>
-            <AddGifNotePopup ref={popupRef} updateSharedState={updateSharedState}/>
+            <AddGifNotePopup ref={popupRef} updateSharedState={updateSharedState} mode={"ADD"}/>
             <AppBar position="static">
                 <CustomToolbar />
             </AppBar>
