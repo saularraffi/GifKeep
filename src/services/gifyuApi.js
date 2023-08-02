@@ -32,3 +32,17 @@ export function deleteGifNote(id) {
         return error;
     }
 }
+
+export function putGifNote(id, description, category, gifUrl) {
+    try {
+        const response = axios.put(baseUrl, {
+            id: id,
+            note: description,
+            category: category,
+            gifUrl: gifUrl
+        });
+        return response;
+    } catch (error) {
+        return error; 
+    }
+}
