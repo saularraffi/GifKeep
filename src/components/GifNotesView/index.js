@@ -2,7 +2,7 @@ import { React, useEffect, useState, useRef } from 'react'
 import { getGifNotes } from '../../services/gifyuApi'
 import GifNoteTile from './GifNoteTile'
 import { Container, Grid, Alert } from '@mui/material'
-import AddGifNotePopup from '../popups/AddGifNotePopup'
+import AddEditGifNotePopup from '../popups/AddEditGifNotePopup'
 
 const styles = {
     alert: {
@@ -68,7 +68,7 @@ const GifNoteView = ({ sharedState, setSharedState }) => {
     return (
         <Container style={{maxWidth: "100rem"}}>
             <AlertMessage />
-            <AddGifNotePopup ref={popupRef} setSharedState={setSharedState} mode={"UPDATE"}/>
+            <AddEditGifNotePopup ref={popupRef} setSharedState={setSharedState} mode={"UPDATE"}/>
             <Grid container spacing={2}>
                 {gifNotes.map(gifNote => (
                     <Grid key={gifNote._id} item xs={12} sm={6} md={4} lg={3}>
