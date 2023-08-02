@@ -6,17 +6,13 @@ import theme from './theme';
 import './App.css';
 
 function App() {
-  const [sharedState, setSharedState] = useState(null);
-
-  const handleStateChange = (newState) => {
-    setSharedState(newState);
-  };
+  const [sharedPopupState, setSharedPopupState] = useState(null);
 
   return (
     <>
       <ThemeProvider theme={theme}>
-        <TopAppBar onStateChange={handleStateChange} />
-        <GifNotesView sharedState={sharedState} setSharedState={setSharedState} />
+        <TopAppBar setSharedPopupState={setSharedPopupState} />
+        <GifNotesView sharedPopupState={sharedPopupState} setSharedPopupState={setSharedPopupState} />
       </ThemeProvider>
     </>
   );
