@@ -3,18 +3,10 @@ import { getGifNotes } from '../../services/gifyuApi'
 import GifNoteTile from './GifNoteTile'
 import { Container, Grid, Alert } from '@mui/material'
 import AddEditGifNotePopup from '../popups/AddEditGifNotePopup'
-
-const styles = {
-    alert: {
-        marginBottom: "30px",
-        width: "30%"
-    }
-}
+import Snackbar from './Snackbar'
 
 const GifNoteView = ({ sharedPopupState, setSharedPopupState }) => {
     const [gifNotes, setGifNotes] = useState([]);
-    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-    const [showErrorAlert, setShowErrorAlert] = useState(false);
     const popupRef = useRef();
 
     const openPopup = (id, description, category, gifUrl) => {
@@ -24,50 +16,16 @@ const GifNoteView = ({ sharedPopupState, setSharedPopupState }) => {
     };
 
     useEffect(() => {
-        if (sharedPopupState != null) {
-            if (sharedPopupState.status === "SUCCESS") {
-                setShowErrorAlert(false);
-                setShowSuccessAlert(true);
-            } else {
-                setShowErrorAlert(true);
-                setShowSuccessAlert(false);
-            }
-        }
         getGifNotes().then(res => {
             setGifNotes(res.data);
+        }).catch(err => {
+            console.log(err);
         });
     }, [sharedPopupState])
 
-    const AlertMessage = () => {
-        const successfulAdd = <Alert severity="success" sx={styles.alert}><strong>Successfully</strong> added GIF Note</Alert>;
-        const failedAdd = <Alert severity="error" sx={styles.alert}><strong>Failed</strong> to add GIF Note!</Alert>
-        const successfulDelete = <Alert severity="success" sx={styles.alert}><strong>Successfully</strong> deleted GIF Note</Alert>;
-        const failedDelete = <Alert severity="error" sx={styles.alert}><strong>Failed</strong> to delete GIF Note!</Alert>
-        const successfulUpdate = <Alert severity="success" sx={styles.alert}><strong>Successfully</strong> updated GIF Note</Alert>;
-        const failedUpdate = <Alert severity="error" sx={styles.alert}><strong>Failed</strong> to updated GIF Note!</Alert>
-
-        if (showSuccessAlert) {
-            if (sharedPopupState.action === "ADD") {
-                return successfulAdd;
-            } else if (sharedPopupState.action === "DELETE") {
-                return successfulDelete;
-            } else {
-                return successfulUpdate;
-            }
-        } else if (showErrorAlert) {
-            if (sharedPopupState.action === "ADD") {
-                return failedAdd;
-            } else if (sharedPopupState.action === "DELETE") {
-                return failedDelete;
-            } else {
-                return failedUpdate;
-            }
-        }
-    }
-
     return (
         <Container style={{maxWidth: "100rem"}}>
-            <AlertMessage />
+            <Snackbar sharedPopupState={sharedPopupState}/>
             <AddEditGifNotePopup ref={popupRef} setSharedPopupState={setSharedPopupState} mode={"UPDATE"}/>
             <Grid container spacing={2}>
                 {gifNotes.map(gifNote => (
