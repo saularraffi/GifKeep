@@ -28,7 +28,7 @@ const style = {
     }
 };
 
-const AddGifNotePopup = forwardRef((props, ref) => {
+const AddGifNotePopup = forwardRef(({setSharedState, mode}, ref) => {
     const [id, setId] = useState("");
     const [description, setDescription] = useState("");
     const [category, setCategory] = useState("");
@@ -56,13 +56,13 @@ const AddGifNotePopup = forwardRef((props, ref) => {
 
     const addGifNote = () => {
         postGifNote(description, category, gifUrl).then(res => {
-            props.updateSharedState({
+            setSharedState({
                 id: res.data._id,
                 action: "ADD",
                 status: "SUCCESS"
             });
         }).catch(err => {
-            props.updateSharedState({
+            setSharedState({
                 error: err,
                 action: "ADD",
                 status: "FAILED"
@@ -74,13 +74,13 @@ const AddGifNotePopup = forwardRef((props, ref) => {
 
     const updateGifNote = () => {
         putGifNote(id, description, category, gifUrl).then(res => {
-            props.updateSharedState({
+            setSharedState({
                 id: res.data._id,
                 action: "UPDATE",
                 status: "SUCCESS"
             });
         }).catch(err => {
-            props.updateSharedState({
+            setSharedState({
                 error: err,
                 action: "UPDATE",
                 status: "FAILED"
@@ -91,7 +91,7 @@ const AddGifNotePopup = forwardRef((props, ref) => {
     }
 
     const SubmitButton = () => {
-        if (props.mode === "UPDATE") {
+        if (mode === "UPDATE") {
             return <Button onClick={updateGifNote} variant="contained" sx={style.buttons}>Update</Button>
         } else {
             return <Button onClick={addGifNote} variant="contained" sx={style.buttons}>Add</Button>

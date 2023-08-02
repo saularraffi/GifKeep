@@ -5,19 +5,15 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { Typography } from '@mui/material';
-import AddGifNotePopup from './AddGifNotePopup';
+import AddGifNotePopup from '../popups/AddGifNotePopup';
 
-const TopAppBar = ({ onStateChange }) => {
+const TopAppBar = ({ setSharedState }) => {
     const popupRef = useRef();
 
     const openPopup = () => {
         if (popupRef.current) {
-            popupRef.current.handleOpen("", "", "");
+            popupRef.current.handleOpen();
         }
-    };
-
-    const updateSharedState = (data) => {
-        onStateChange(data);
     };
 
     const CustomToolbar = () => {
@@ -40,7 +36,7 @@ const TopAppBar = ({ onStateChange }) => {
 
     return (
         <Box sx={{ flexGrow: 1, marginBottom: "50px" }}>
-            <AddGifNotePopup ref={popupRef} updateSharedState={updateSharedState} mode={"ADD"}/>
+            <AddGifNotePopup ref={popupRef} setSharedState={setSharedState} mode={"ADD"}/>
             <AppBar position="static">
                 <CustomToolbar />
             </AppBar>

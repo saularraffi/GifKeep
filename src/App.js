@@ -8,14 +8,10 @@ import './App.css';
 function App() {
   const [sharedState, setSharedState] = useState(null);
 
-  const handleStateChange = (newState) => {
-    setSharedState(newState);
-  };
-
   return (
     <>
       <ThemeProvider theme={theme}>
-        <TopAppBar onStateChange={handleStateChange} />
+        <TopAppBar setSharedState={setSharedState} />
         <GifNotesView sharedState={sharedState} setSharedState={setSharedState} />
       </ThemeProvider>
     </>
