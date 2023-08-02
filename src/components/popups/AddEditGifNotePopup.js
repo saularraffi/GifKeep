@@ -76,13 +76,13 @@ const AddGifNotePopup = forwardRef(({setSharedPopupState, mode}, ref) => {
         putGifNote(id, description, category, gifUrl).then(res => {
             setSharedPopupState({
                 id: res.data._id,
-                action: "UPDATE",
+                action: "EDIT",
                 status: "SUCCESS"
             });
         }).catch(err => {
             setSharedPopupState({
                 error: err,
-                action: "UPDATE",
+                action: "EDIT",
                 status: "FAILED"
             });
             console.log(err);
