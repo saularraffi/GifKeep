@@ -18,9 +18,9 @@ router.get(endpoint, async (req, res) => {
 })
 
 router.post(endpoint, async (req, res) => {
-    const note = req.body.note;
-    const category = req.body.category;
-    const gifUrl = req.body.gifUrl;
+    const { note } = req.body;
+    const { category } = req.body;
+    const { gifUrl } = req.body;
 
     gifNotesService.saveGifNote(note, category, gifUrl)
     .then(gifNote => {
@@ -32,6 +32,40 @@ router.post(endpoint, async (req, res) => {
         res.status(500);
         res.send("Error saving GIF note");
     });
+})
+
+router.delete(endpoint, async (req, res) => {
+    const id = req.query.id;
+
+    gifNotesService.deleteGifNote(id)
+    .then(() => {
+        res.status(200);
+        res.send(id);
+    })
+    .catch(err => {
+        console.log(`[-] Error deleting GIF Note with id ${id}\n${err}`);
+        res.status(500);
+        res.send(`Error deleting GIF Note with id ${id}`);
+    })
+})
+
+router.put(endpoint, async (req, res) => {
+    console.log(req.body)
+    const { id } = req.body;
+    const { note } = req.body;
+    const { category } = req.body;
+    const { gifUrl } = req.body;
+
+    gifNotesService.updateGifNote(id, note, category, gifUrl)
+    .then(gifNote => {
+        res.status(200);
+        res.send(gifNote);
+    })
+    .catch(err => {
+        console.log(`[-] Error updating GIF Note with id ${id}\n${err}`);
+        res.status(500);
+        res.send(`Error updating GIF Note with id ${id}`);
+    })
 })
 
 module.exports = router

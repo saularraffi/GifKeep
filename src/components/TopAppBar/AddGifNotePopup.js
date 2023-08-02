@@ -1,6 +1,7 @@
 import { React, useState, forwardRef, useImperativeHandle } from 'react'
 import { Box, Modal, Typography, TextField, Button  } from '@mui/material';
 import { postGifNote } from '../../services/gifyuApi';
+import { putGifNote } from '../../services/gifyuApi';
 
 const style = {
     root: {
@@ -28,12 +29,20 @@ const style = {
 };
 
 const AddGifNotePopup = forwardRef((props, ref) => {
+    const [id, setId] = useState("");
     const [description, setDescription] = useState("");
     const [category, setCategory] = useState("");
     const [gifUrl, setGifUrl] = useState("");
     const [open, setOpen] = useState(false);
     
-    const handleOpen = () => setOpen(true);
+    const handleOpen = (id, description, category, gifUrl) => {
+        setId(id);
+        setDescription(description);
+        setCategory(category);
+        setGifUrl(gifUrl);
+        setOpen(true);
+    }
+
     const handleClose = () => {
         setDescription("");
         setCategory("");
@@ -47,11 +56,46 @@ const AddGifNotePopup = forwardRef((props, ref) => {
 
     const addGifNote = () => {
         postGifNote(description, category, gifUrl).then(res => {
-            props.updateSharedState(res.data);
+            props.updateSharedState({
+                id: res.data._id,
+                action: "ADD",
+                status: "SUCCESS"
+            });
         }).catch(err => {
+            props.updateSharedState({
+                error: err,
+                action: "ADD",
+                status: "FAILED"
+            });
             console.log(err);
         })
-        handleClose()
+        handleClose();
+    }
+
+    const updateGifNote = () => {
+        putGifNote(id, description, category, gifUrl).then(res => {
+            props.updateSharedState({
+                id: res.data._id,
+                action: "UPDATE",
+                status: "SUCCESS"
+            });
+        }).catch(err => {
+            props.updateSharedState({
+                error: err,
+                action: "UPDATE",
+                status: "FAILED"
+            });
+            console.log(err);
+        })
+        handleClose();
+    }
+
+    const SubmitButton = () => {
+        if (props.mode === "UPDATE") {
+            return <Button onClick={updateGifNote} variant="contained" sx={style.buttons}>Update</Button>
+        } else {
+            return <Button onClick={addGifNote} variant="contained" sx={style.buttons}>Add</Button>
+        }
     }
 
     return (
@@ -95,7 +139,7 @@ const AddGifNotePopup = forwardRef((props, ref) => {
                         sx={style.inputField}>
                     </TextField>
                 </div>
-                <Button onClick={addGifNote} variant="contained" sx={style.buttons}>Add</Button>
+                <SubmitButton />
                 <Button onClick={handleClose} sx={style.buttons}>Cancel</Button>
             </Box>
         </Modal>
