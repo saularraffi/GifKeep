@@ -8,11 +8,11 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import { Typography } from '@mui/material';
+import { Typography, Grid } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import theme from '../../theme';
 
 const categories = [
     "Turn Patterns",
@@ -21,7 +21,21 @@ const categories = [
     "Other"
 ]
 
+const styles = {
+    dividerContainer: {
+        display: "flex",
+        alignItems: "center",
+        width: "35%"
+    },
+    divider: {
+        width: "100%",
+        borderBottomWidth: "2px"
+    }
+}
+
 export default function SideDrawer({ open, setOpen }) {
+    const lightGrey = "#c7c7c7"
+    const [addCategoryButtonColor, setAddCategoryButtonColor] = React.useState(lightGrey)
     const anchor = "left";
 
     const toggleDrawer = (isOpen) => (event) => {
@@ -36,6 +50,11 @@ export default function SideDrawer({ open, setOpen }) {
         alert(index)
     }
 
+    const handleAddButtonHighlight = (hover) => {
+        const color = hover ? theme.palette.primary.main : lightGrey;
+        setAddCategoryButtonColor(color);
+    }
+
     const drawerItems = () => (
         <Box
             sx={{ width: 250 }}
@@ -44,7 +63,7 @@ export default function SideDrawer({ open, setOpen }) {
             onKeyDown={toggleDrawer(false)}
         >
             <Typography sx={{ margin: "20px 0 10px 10px", fontSize: "1.5rem" }}>Categories</Typography>
-            <Divider />
+            <Divider color={lightGrey}/>
             <List>
                 {categories.map((text, index) => (
                 <ListItem key={text} disablePadding>
@@ -59,6 +78,22 @@ export default function SideDrawer({ open, setOpen }) {
                 </ListItem>
                 ))}
             </List>
+            <Box sx={{ marginLeft: "30px" }} 
+                onMouseEnter={() => handleAddButtonHighlight(true)}
+                onMouseLeave={() => handleAddButtonHighlight(false)}
+            >
+                <Grid container>
+                    <Grid item sx={styles.dividerContainer}>
+                        <Divider color={addCategoryButtonColor} sx={styles.divider} />
+                    </Grid>
+                    <Grid item sx={{ margin: 0, padding: 0 }}>
+                        <AddBoxIcon sx={{ fontSize: "1.7em", color: addCategoryButtonColor }}/>
+                    </Grid>
+                    <Grid item sx={styles.dividerContainer}>
+                        <Divider color={addCategoryButtonColor} sx={styles.divider} />
+                    </Grid>
+                </Grid>
+            </Box>
         </Box>
     );
 
@@ -68,8 +103,6 @@ export default function SideDrawer({ open, setOpen }) {
                 anchor={anchor}
                 open={open}
                 onClose={toggleDrawer(false)}
-                // hideBackdrop={true}
-                // variant={"permanent"}
             >
                 {drawerItems()}
             </Drawer>
