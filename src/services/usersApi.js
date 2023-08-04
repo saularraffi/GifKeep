@@ -12,3 +12,16 @@ export function getUser() {
         return error;
     }
 }
+
+export function putUser(id, username, categories) {
+    try {
+        const response = axios.put(baseUrl, {
+            id: id,
+            username: username,
+            categories: categories
+        });
+        return response;
+    } catch (error) {
+        return error; 
+    }
+}
