@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
@@ -13,13 +12,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import theme from '../../theme';
-
-const categories = [
-    "Turn Patterns",
-    "Hand Play",
-    "Sensual",
-    "Other"
-]
 
 const styles = {
     dividerContainer: {
@@ -37,6 +29,11 @@ export default function SideDrawer({ open, setOpen }) {
     const lightGrey = "#c7c7c7"
     const [addCategoryButtonColor, setAddCategoryButtonColor] = React.useState(lightGrey)
     const anchor = "left";
+    const categories = localStorage.getItem("categories").split(",");
+
+    React.useEffect(() => {
+
+    }, [])
 
     const toggleDrawer = (isOpen) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
