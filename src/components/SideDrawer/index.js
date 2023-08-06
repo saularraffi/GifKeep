@@ -59,8 +59,9 @@ export default function SideDrawer({ open, setOpen }) {
         }
     
         setOpen(isOpen);
-        setInAddCategoryMode(false);
         setNewCategory("");
+        setInAddCategoryMode(false);
+        setAddCategoryButtonColor(lightGrey);
     };
 
     const handleCategoryOptionClick = (index) => {
