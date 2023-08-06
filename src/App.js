@@ -16,7 +16,6 @@ function App() {
   useEffect(() => {
     getUser(localStorage.getItem("userId")).then(res => res.data)
     .then(user => {
-      console.log(user);
       localStorage.setItem("userId", user._id);
       localStorage.setItem("username", user.username);
       localStorage.setItem("categories", user.categories);
