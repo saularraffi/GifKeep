@@ -31,19 +31,23 @@ export default function CategoryRow(props) {
         categories.splice(props.index, 1);
 
         putUser(userId, username, categories).then(res => res.data)
-        .then(user => props.setCategories(user.categories))
+        .then(user => props.setUserCategories(user.categories))
         .catch(err => console.log(err));
+    };
+
+    const handleEditMode = () => {
+        props.setEditState({ inEditMode: true, index: props.index })
     };
 
     const MenuOptions = () => {
         return (
             <>
+                <MenuItem onClick={handleEditMode}>
+                    <Typography sx={{ fontFamily: "Kanit", color: "blue" }}>EDIT</Typography>
+                </MenuItem>  
                 <MenuItem onClick={handleDelete}>
                     <Typography sx={{ fontFamily: "Kanit", color: "red" }}>DELETE</Typography>
                 </MenuItem>
-                <MenuItem onClick={props.handleEdit}>
-                    <Typography sx={{ fontFamily: "Kanit", color: "blue" }}>EDIT</Typography>
-                </MenuItem>  
             </>
         )
     };

@@ -54,12 +54,12 @@ const GifNoteTile = ({id, note, category, gifUrl, setSharedPopupState, openPopup
     const MenuOptions = () => {
         return (
             <>
-                <MenuItem onClick={handleDelete}>
-                    <Typography sx={{ fontFamily: "Kanit", color: "red" }}>DELETE</Typography>
-                </MenuItem>
                 <MenuItem onClick={handleEdit}>
                     <Typography sx={{ fontFamily: "Kanit", color: "blue" }}>EDIT</Typography>
                 </MenuItem>  
+                <MenuItem onClick={handleDelete}>
+                    <Typography sx={{ fontFamily: "Kanit", color: "red" }}>DELETE</Typography>
+                </MenuItem>
             </>
         )
     };
