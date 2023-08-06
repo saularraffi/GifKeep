@@ -75,6 +75,10 @@ export default function SideDrawer({ open, setOpen }) {
         }
     };
 
+    const handleEdit = () => {
+        alert("handling edit");
+    };
+
     const AddCategoryButton = () => {
         if (!inAddCategoryMode) {
             return (
@@ -112,7 +116,13 @@ export default function SideDrawer({ open, setOpen }) {
             <Divider color={lightGrey}/>
             <List>
                 {categories.map((text, index) => (
-                    <CategoryRow text={text} index={index} />
+                    <CategoryRow
+                        key={`${index}-${text}`}
+                        text={text}
+                        index={index}
+                        handleEdit={handleEdit}
+                        setCategories={setCategories}
+                    />
                 ))}
             </List>
             {inAddCategoryMode && 
