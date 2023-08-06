@@ -3,18 +3,14 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import TextField from '@mui/material/TextField';
 import theme from '../../theme';
 import { putUser } from '../../services/usersApi';
+import CategoryRow from './CategoryRow';
 
 const styles = {
     dividerContainer: {
@@ -64,10 +60,6 @@ export default function SideDrawer({ open, setOpen }) {
         setAddCategoryButtonColor(lightGrey);
     };
 
-    const handleCategoryOptionClick = (index) => {
-        alert(index)
-    };
-
     const handleAddButtonHighlight = (hover) => {
         const color = hover ? theme.palette.primary.main : lightGrey;
         setAddCategoryButtonColor(color);
@@ -109,21 +101,6 @@ export default function SideDrawer({ open, setOpen }) {
                 </Box>
             )
         }
-    };
-
-    const CategoryRow = (props) => {
-        return (
-            <ListItem key={props.text} disablePadding>
-                <ListItemButton sx={{ paddingRight: 0 }}>
-                    <ListItemText primary={props.text} />
-                    <ListItemIcon sx={{ minWidth: 0 }}>
-                        <IconButton onClick={() => handleCategoryOptionClick(props.index)}>
-                            <MoreVertIcon />
-                        </IconButton>
-                    </ListItemIcon>
-                </ListItemButton>
-            </ListItem>
-        )
     };
 
     const drawerItems = () => (
