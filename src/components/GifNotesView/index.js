@@ -24,7 +24,7 @@ const GifNoteView = ({ sharedPopupState, setSharedPopupState }) => {
     }, [sharedPopupState])
 
     return (
-        <Container style={{maxWidth: "100rem"}}>
+        <Container style={{ maxWidth: "100rem", marginTop: "50px" }}>
             <Snackbar sharedPopupState={sharedPopupState}/>
             <AddEditGifNotePopup ref={popupRef} setSharedPopupState={setSharedPopupState} mode={"UPDATE"}/>
             <Grid container spacing={2}>

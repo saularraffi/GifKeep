@@ -50,7 +50,6 @@ router.delete(endpoint, async (req, res) => {
 })
 
 router.put(endpoint, async (req, res) => {
-    console.log(req.body)
     const { id } = req.body;
     const { note } = req.body;
     const { category } = req.body;
