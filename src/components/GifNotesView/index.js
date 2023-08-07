@@ -1,11 +1,11 @@
 import { React, useEffect, useState, useRef } from 'react'
-import { getGifNotes } from '../../services/gifyuApi'
+import { getGifNotes, getGifNotesByCategory } from '../../services/gifyuApi'
 import GifNoteTile from './GifNoteTile'
 import { Container, Grid, Alert } from '@mui/material'
 import AddEditGifNotePopup from '../popups/AddEditGifNotePopup'
 import Snackbar from './Snackbar'
 
-const GifNoteView = ({ sharedPopupState, setSharedPopupState }) => {
+const GifNoteView = ({ sharedPopupState, setSharedPopupState, sharedCategoryState }) => {
     const [gifNotes, setGifNotes] = useState([]);
     const popupRef = useRef();
 
@@ -15,13 +15,25 @@ const GifNoteView = ({ sharedPopupState, setSharedPopupState }) => {
         }
     };
 
+    const fetchAllGifNotes = () => {
+        getGifNotes()
+        .then(res => setGifNotes(res.data))
+        .catch(err => console.log(err));
+    };
+
+    const fetchGifNotesByCategory = () => {
+        getGifNotesByCategory(sharedCategoryState)
+        .then(res => setGifNotes(res.data))
+        .catch(err => console.log(err));
+    };
+
     useEffect(() => {
-        getGifNotes().then(res => {
-            setGifNotes(res.data);
-        }).catch(err => {
-            console.log(err);
-        });
-    }, [sharedPopupState])
+        if (sharedCategoryState === "") {
+            fetchAllGifNotes();
+        } else {
+            fetchGifNotesByCategory();
+        }
+    }, [sharedPopupState, sharedCategoryState])
 
     return (
         <Container style={{ maxWidth: "100rem", marginTop: "50px" }}>

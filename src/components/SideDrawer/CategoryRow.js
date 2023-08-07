@@ -52,9 +52,13 @@ export default function CategoryRow(props) {
         )
     };
 
+    const handleCategorySelected = () => {
+        props.handleCategorySelected(props.index);
+    };
+
     return (
         <ListItem key={props.text} disablePadding>
-            <ListItemButton sx={{ paddingRight: 0 }}>
+            <ListItemButton onClick={handleCategorySelected} sx={{ paddingRight: 0 }}>
                 <ListItemText primary={props.text} />
                 <ListItemIcon sx={{ minWidth: 0 }}>
                     <IconButton onClick={(event) => handleCategoryOptionClick(event, props.index)}>

@@ -55,7 +55,7 @@ const AddGifNotePopup = forwardRef(({setSharedPopupState, mode}, ref) => {
     }));
 
     const addGifNote = () => {
-        postGifNote(description, category, gifUrl).then(res => {
+        postGifNote(description, category.trim(), gifUrl).then(res => {
             setSharedPopupState({
                 id: res.data._id,
                 action: "ADD",
@@ -73,7 +73,7 @@ const AddGifNotePopup = forwardRef(({setSharedPopupState, mode}, ref) => {
     }
 
     const updateGifNote = () => {
-        putGifNote(id, description, category, gifUrl).then(res => {
+        putGifNote(id, description, category.trim(), gifUrl).then(res => {
             setSharedPopupState({
                 id: res.data._id,
                 action: "EDIT",

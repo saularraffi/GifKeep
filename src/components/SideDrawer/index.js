@@ -24,7 +24,7 @@ const styles = {
     }
 }
 
-export default function SideDrawer({ open, setOpen }) {
+export default function SideDrawer({ open, setOpen, setSharedCategoryState }) {
     const lightGrey = "#c7c7c7"
     const [addCategoryButtonColor, setAddCategoryButtonColor] = React.useState(lightGrey)
     const [categories, setCategories] = React.useState(localStorage.getItem("categories").split(","));
@@ -105,6 +105,10 @@ export default function SideDrawer({ open, setOpen }) {
         setInAddCategoryMode(true);
     };
 
+    const handleCategorySelected = (index) => {
+        setSharedCategoryState(categories[index]);
+    };
+
     const AddCategoryButton = () => {
         if (!inAddCategoryMode) {
             return (
@@ -157,6 +161,7 @@ export default function SideDrawer({ open, setOpen }) {
                         index={index}
                         setUserCategories={setUserCategories}
                         setEditState={setEditState}
+                        handleCategorySelected={handleCategorySelected}
                     />
                 ))}
             </List>
