@@ -14,6 +14,7 @@ import { putUser } from '../../services/usersApi';
 
 export default function CategoryRow(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [rowButtonEnabled, setRowButtonEnabled] = React.useState(true);
     const open = Boolean(anchorEl);
 
     const handleCategoryOptionClick = (event, index) => {
@@ -52,8 +53,18 @@ export default function CategoryRow(props) {
         )
     };
 
+    const disableRowButton = () => {
+        setRowButtonEnabled(false);
+    };
+
+    const enableRowButton = () => {
+        setRowButtonEnabled(true);
+    };
+
     const handleCategorySelected = () => {
-        props.handleCategorySelected(props.index);
+        if (rowButtonEnabled && !open) {
+            props.handleCategorySelected(props.index);
+        }
     };
 
     return (
@@ -61,7 +72,11 @@ export default function CategoryRow(props) {
             <ListItemButton onClick={handleCategorySelected} sx={{ paddingRight: 0 }}>
                 <ListItemText primary={props.text} />
                 <ListItemIcon sx={{ minWidth: 0 }}>
-                    <IconButton onClick={(event) => handleCategoryOptionClick(event, props.index)}>
+                    <IconButton
+                        onMouseEnter={disableRowButton}
+                        onMouseLeave={enableRowButton}
+                        onClick={(event) => handleCategoryOptionClick(event, props.index)}
+                    >
                         <MoreVertIcon />
                     </IconButton>
                     <Menu
