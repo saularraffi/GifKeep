@@ -15,6 +15,7 @@ import { putUser } from '../../services/usersApi';
 export default function CategoryRow(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [rowButtonEnabled, setRowButtonEnabled] = React.useState(true);
+    const selectedColor = "#cacaca";
     const open = Boolean(anchorEl);
 
     const handleCategoryOptionClick = (event, index) => {
@@ -68,7 +69,11 @@ export default function CategoryRow(props) {
     };
 
     return (
-        <ListItem key={props.text} disablePadding>
+        <ListItem
+            key={props.text}
+            disablePadding
+            sx={{ backgroundColor: props.selectedRow == props.index ? selectedColor : 'inherit' }}
+        >
             <ListItemButton onClick={handleCategorySelected} sx={{ paddingRight: 0 }}>
                 <ListItemText primary={props.text} />
                 <ListItemIcon sx={{ minWidth: 0 }}>

@@ -32,6 +32,7 @@ export default function SideDrawer({ open, setOpen, setSharedCategoryState }) {
     const [inAddCategoryMode, setInAddCategoryMode] = React.useState(false);
     const [editState, setEditState] = React.useState({ inEditMode: false, index: 0 });
     const [editedCategoryText, setEditedCategoryText] = React.useState("");
+    const [selectedRow, setSelectedRow] = React.useState(-1);
     const anchor = "left";
 
     const setUserCategories = (updatedCategories) => {
@@ -106,7 +107,10 @@ export default function SideDrawer({ open, setOpen, setSharedCategoryState }) {
     };
 
     const handleCategorySelected = (index) => {
-        setSharedCategoryState(categories[index]);
+        const category = index === selectedRow ? "" : categories[index];
+        const selected = index === selectedRow ? -1 : index;
+        setSharedCategoryState(category);
+        setSelectedRow(selected);
     };
 
     const AddCategoryButton = () => {
@@ -159,6 +163,7 @@ export default function SideDrawer({ open, setOpen, setSharedCategoryState }) {
                         key={`${index}-${text}`}
                         text={text}
                         index={index}
+                        selectedRow={selectedRow}
                         setUserCategories={setUserCategories}
                         setEditState={setEditState}
                         handleCategorySelected={handleCategorySelected}
