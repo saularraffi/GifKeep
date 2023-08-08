@@ -34,7 +34,7 @@ router.get(endpoint, async (req, res) => {
     const { category } = req.query;
     
     if (category !== undefined) {
-        getGifNotesByCategory(res, category.toLowerCase());
+        getGifNotesByCategory(res, category);
     } else {
         getAllGifNotes(res);
     }

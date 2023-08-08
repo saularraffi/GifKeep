@@ -1,5 +1,15 @@
 import { React, useState, forwardRef, useImperativeHandle } from 'react'
-import { Box, Modal, Typography, TextField, Button  } from '@mui/material';
+import { 
+    Box,
+    Modal,
+    Typography,
+    TextField,
+    Button,
+    FormControl,
+    Select,
+    MenuItem,
+    InputLabel
+} from '@mui/material';
 import { postGifNote } from '../../services/gifyuApi';
 import { putGifNote } from '../../services/gifyuApi';
 
@@ -34,6 +44,8 @@ const AddGifNotePopup = forwardRef(({setSharedPopupState, mode}, ref) => {
     const [category, setCategory] = useState("");
     const [gifUrl, setGifUrl] = useState("");
     const [open, setOpen] = useState(false);
+
+    const categories = localStorage.getItem("categories").split(",");
     
     const handleOpen = (id, description, category, gifUrl) => {
         setId(id);
@@ -49,6 +61,10 @@ const AddGifNotePopup = forwardRef(({setSharedPopupState, mode}, ref) => {
         setGifUrl("");
         setOpen(false);
     }
+    
+    const handleCategorySelection = (event) => {
+        setCategory(event.target.value);
+    };
 
     useImperativeHandle(ref, () => ({
         handleOpen,
@@ -109,36 +125,43 @@ const AddGifNotePopup = forwardRef(({setSharedPopupState, mode}, ref) => {
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                     Add GIF Note
                 </Typography>
-                <div>
-                    <TextField 
-                        onChange={(e) => setDescription(e.target.value)} 
-                        value={description} 
-                        label="Description" 
-                        variant="standard"
-                        autoComplete="off"
-                        sx={style.inputField}>
-                    </TextField>
-                </div>
-                <div>
-                    <TextField
-                        onChange={(e) => setCategory(e.target.value)} 
-                        value={category} 
-                        label="Category" 
-                        variant="standard"
-                        autoComplete="off"
-                        sx={style.inputField}>
-                    </TextField>
-                </div>
-                <div>
-                    <TextField 
-                        onChange={(e) => setGifUrl(e.target.value)} 
-                        value={gifUrl} 
-                        label="GIF URL" 
-                        variant="standard"
-                        autoComplete="off"
-                        sx={style.inputField}>
-                    </TextField>
-                </div>
+                <TextField
+                    defaultValue={description}
+                    onChange={(e) => setDescription(e.target.value)} 
+                    value={description} 
+                    label="Description" 
+                    variant="standard"
+                    autoComplete="off"
+                    sx={style.inputField}>
+                </TextField>
+                <FormControl variant="standard" sx={{ width: "50%" }}>
+                    <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                    <Select
+                        defaultValue={category}
+                        value={category}
+                        label="Category"
+                        onChange={handleCategorySelection}
+                        renderValue={() => <em>{category}</em>}
+                    >
+                        {categories.map((categoryName, index) => {
+                            return <MenuItem
+                                        key={`${index}-${categoryName}`}
+                                        value={categoryName}
+                                    >
+                                            {categoryName}
+                                    </MenuItem>
+                        })}
+                    </Select>
+                </FormControl>
+                <TextField
+                    defaultValue={gifUrl}
+                    onChange={(e) => setGifUrl(e.target.value)} 
+                    value={gifUrl} 
+                    label="GIF URL" 
+                    variant="standard"
+                    autoComplete="off"
+                    sx={style.inputField}>
+                </TextField>
                 <SubmitButton />
                 <Button onClick={handleClose} sx={style.buttons}>Cancel</Button>
             </Box>
