@@ -141,13 +141,7 @@ const AddGifNotePopup = forwardRef(({setSharedPopupState, mode}, ref) => {
                         value={category}
                         label="Category"
                         onChange={handleCategorySelection}
-                        renderValue={(selected) => {
-                            if (category !== "") {
-                                return <em>{category}</em>;
-                            }
-                
-                            return "";
-                        }}
+                        renderValue={() => <em>{category}</em>}
                     >
                         {categories.map((categoryName, index) => {
                             return <MenuItem
