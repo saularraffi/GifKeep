@@ -14,6 +14,8 @@ import { putUser } from '../../services/usersApi';
 
 export default function CategoryRow(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [rowButtonEnabled, setRowButtonEnabled] = React.useState(true);
+    const selectedColor = "#cacaca";
     const open = Boolean(anchorEl);
 
     const handleCategoryOptionClick = (event, index) => {
@@ -36,7 +38,21 @@ export default function CategoryRow(props) {
     };
 
     const handleEditMode = () => {
-        props.setEditState({ inEditMode: true, index: props.index })
+        props.setEditStateHelper({ inEditMode: true, index: props.index })
+    };
+
+    const disableRowButton = () => {
+        setRowButtonEnabled(false);
+    };
+
+    const enableRowButton = () => {
+        setRowButtonEnabled(true);
+    };
+
+    const handleCategorySelected = () => {
+        if (rowButtonEnabled && !open) {
+            props.handleCategorySelected(props.index);
+        }
     };
 
     const MenuOptions = () => {
@@ -53,11 +69,19 @@ export default function CategoryRow(props) {
     };
 
     return (
-        <ListItem key={props.text} disablePadding>
-            <ListItemButton sx={{ paddingRight: 0 }}>
+        <ListItem
+            key={props.text}
+            disablePadding
+            sx={{ backgroundColor: props.selectedRow == props.index ? selectedColor : 'inherit' }}
+        >
+            <ListItemButton onClick={handleCategorySelected} sx={{ paddingRight: 0 }}>
                 <ListItemText primary={props.text} />
                 <ListItemIcon sx={{ minWidth: 0 }}>
-                    <IconButton onClick={(event) => handleCategoryOptionClick(event, props.index)}>
+                    <IconButton
+                        onMouseEnter={disableRowButton}
+                        onMouseLeave={enableRowButton}
+                        onClick={(event) => handleCategoryOptionClick(event, props.index)}
+                    >
                         <MoreVertIcon />
                     </IconButton>
                     <Menu

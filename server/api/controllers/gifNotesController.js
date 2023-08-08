@@ -4,7 +4,7 @@ const router = express.Router()
 
 const endpoint = "/api/gifnotes"
 
-router.get(endpoint, async (req, res) => {
+const getAllGifNotes = (res) => {
     gifNotesService.getGifNotes()
     .then(gifNotes => {
         res.status(200);
@@ -15,6 +15,29 @@ router.get(endpoint, async (req, res) => {
         res.status(500);
         res.send("Error fetching GIF notes");
     })
+}
+
+const getGifNotesByCategory = (res, category) => {
+    gifNotesService.getGifNotesByCategory(category)
+    .then(gifNotes => {
+        res.status(200);
+        res.send(gifNotes);
+    })
+    .catch(err => {
+        console.log(`[-] Error fetching GIF note\n${err}`);
+        res.status(500);
+        res.send("Error fetching GIF notes");
+    })
+}
+
+router.get(endpoint, async (req, res) => {
+    const { category } = req.query;
+    
+    if (category !== undefined) {
+        getGifNotesByCategory(res, category.toLowerCase());
+    } else {
+        getAllGifNotes(res);
+    }
 })
 
 router.post(endpoint, async (req, res) => {

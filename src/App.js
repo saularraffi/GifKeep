@@ -10,6 +10,7 @@ import { getUser } from './services/usersApi';
 function App() {
   const [sharedPopupState, setSharedPopupState] = useState(null);
   const [sharedDrawerState, setSharedDrawerState] = useState(false);
+  const [sharedCategoryState, setSharedCategoryState] = useState("");
 
   localStorage.setItem("userId", "64cd117697db1a3018d79eb7");
 
@@ -29,9 +30,20 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <TopAppBar setSharedPopupState={setSharedPopupState} openDrawer={setSharedDrawerState} />
-        <SideDrawer open={sharedDrawerState} setOpen={setSharedDrawerState} />
-        <GifNotesView sharedPopupState={sharedPopupState} setSharedPopupState={setSharedPopupState} />
+        <TopAppBar
+          setSharedPopupState={setSharedPopupState}
+          openDrawer={setSharedDrawerState}
+        />
+        <SideDrawer
+          open={sharedDrawerState}
+          setOpen={setSharedDrawerState}
+          setSharedCategoryState={setSharedCategoryState}
+        />
+        <GifNotesView
+          sharedPopupState={sharedPopupState}
+          setSharedPopupState={setSharedPopupState}
+          sharedCategoryState={sharedCategoryState}
+        />
       </ThemeProvider>
     </>
   );

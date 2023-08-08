@@ -24,7 +24,7 @@ const styles = {
     }
 }
 
-export default function SideDrawer({ open, setOpen }) {
+export default function SideDrawer({ open, setOpen, setSharedCategoryState }) {
     const lightGrey = "#c7c7c7"
     const [addCategoryButtonColor, setAddCategoryButtonColor] = React.useState(lightGrey)
     const [categories, setCategories] = React.useState(localStorage.getItem("categories").split(","));
@@ -32,6 +32,7 @@ export default function SideDrawer({ open, setOpen }) {
     const [inAddCategoryMode, setInAddCategoryMode] = React.useState(false);
     const [editState, setEditState] = React.useState({ inEditMode: false, index: 0 });
     const [editedCategoryText, setEditedCategoryText] = React.useState("");
+    const [selectedRow, setSelectedRow] = React.useState(-1);
     const anchor = "left";
 
     const setUserCategories = (updatedCategories) => {
@@ -45,6 +46,16 @@ export default function SideDrawer({ open, setOpen }) {
         }
     };
 
+    const setInAddCategoryModeHelper = (state) => {
+        setInAddCategoryMode(state);
+        setEditState({ inEditMode: false, index: 0 });
+    };
+
+    const setEditStateHelper = (state) => {
+        setEditState(state);
+        setInAddCategoryMode(false);
+    };
+
     const addCategory = () => {
         const userId = localStorage.getItem("userId");
         const username = localStorage.getItem("username");
@@ -56,7 +67,7 @@ export default function SideDrawer({ open, setOpen }) {
             .then(user => {
                 localStorage.setItem("categories", user.categories);
                 setUserCategories(user.categories);
-                setInAddCategoryMode(false);
+                setInAddCategoryModeHelper(false);
             })
             .catch(err => console.log(err));
         }
@@ -78,7 +89,7 @@ export default function SideDrawer({ open, setOpen }) {
         .then(user => {
             setUserCategories(user.categories);
             setEditedCategoryText("");
-            setEditState({ inEditMode: false, index: 0 });
+            setEditStateHelper({ inEditMode: false, index: 0 });
         })
         .catch(err => console.log(err));
     };
@@ -90,10 +101,10 @@ export default function SideDrawer({ open, setOpen }) {
     
         setOpen(isOpen);
         setNewCategory("");
-        setInAddCategoryMode(false);
+        setInAddCategoryModeHelper(false);
         setAddCategoryButtonColor(lightGrey);
         setEditedCategoryText("");
-        setEditState({ inEditMode: false, index: 0 });
+        setEditStateHelper({ inEditMode: false, index: 0 });
     };
 
     const handleAddButtonHighlight = (hover) => {
@@ -102,7 +113,14 @@ export default function SideDrawer({ open, setOpen }) {
     };
 
     const handleAddCategoryBtnClicked = () => {
-        setInAddCategoryMode(true);
+        setInAddCategoryModeHelper(true);
+    };
+
+    const handleCategorySelected = (index) => {
+        const category = index === selectedRow ? "" : categories[index];
+        const selected = index === selectedRow ? -1 : index;
+        setSharedCategoryState(category);
+        setSelectedRow(selected);
     };
 
     const AddCategoryButton = () => {
@@ -155,8 +173,10 @@ export default function SideDrawer({ open, setOpen }) {
                         key={`${index}-${text}`}
                         text={text}
                         index={index}
+                        selectedRow={selectedRow}
                         setUserCategories={setUserCategories}
-                        setEditState={setEditState}
+                        setEditStateHelper={setEditStateHelper}
+                        handleCategorySelected={handleCategorySelected}
                     />
                 ))}
             </List>
