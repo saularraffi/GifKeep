@@ -41,19 +41,6 @@ export default function CategoryRow(props) {
         props.setEditStateHelper({ inEditMode: true, index: props.index })
     };
 
-    const MenuOptions = () => {
-        return (
-            <>
-                <MenuItem onClick={handleEditMode}>
-                    <Typography sx={{ fontFamily: "Kanit", color: "blue" }}>EDIT</Typography>
-                </MenuItem>  
-                <MenuItem onClick={handleDelete}>
-                    <Typography sx={{ fontFamily: "Kanit", color: "red" }}>DELETE</Typography>
-                </MenuItem>
-            </>
-        )
-    };
-
     const disableRowButton = () => {
         setRowButtonEnabled(false);
     };
@@ -66,6 +53,19 @@ export default function CategoryRow(props) {
         if (rowButtonEnabled && !open) {
             props.handleCategorySelected(props.index);
         }
+    };
+
+    const MenuOptions = () => {
+        return (
+            <>
+                <MenuItem onClick={handleEditMode}>
+                    <Typography sx={{ fontFamily: "Kanit", color: "blue" }}>EDIT</Typography>
+                </MenuItem>  
+                <MenuItem onClick={handleDelete}>
+                    <Typography sx={{ fontFamily: "Kanit", color: "red" }}>DELETE</Typography>
+                </MenuItem>
+            </>
+        )
     };
 
     return (
