@@ -46,6 +46,16 @@ export default function SideDrawer({ open, setOpen, setSharedCategoryState }) {
         }
     };
 
+    const setInAddCategoryModeHelper = (state) => {
+        setInAddCategoryMode(state);
+        setEditState({ inEditMode: false, index: 0 });
+    };
+
+    const setEditStateHelper = (state) => {
+        setEditState(state);
+        setInAddCategoryMode(false);
+    };
+
     const addCategory = () => {
         const userId = localStorage.getItem("userId");
         const username = localStorage.getItem("username");
@@ -57,7 +67,7 @@ export default function SideDrawer({ open, setOpen, setSharedCategoryState }) {
             .then(user => {
                 localStorage.setItem("categories", user.categories);
                 setUserCategories(user.categories);
-                setInAddCategoryMode(false);
+                setInAddCategoryModeHelper(false);
             })
             .catch(err => console.log(err));
         }
@@ -79,7 +89,7 @@ export default function SideDrawer({ open, setOpen, setSharedCategoryState }) {
         .then(user => {
             setUserCategories(user.categories);
             setEditedCategoryText("");
-            setEditState({ inEditMode: false, index: 0 });
+            setEditStateHelper({ inEditMode: false, index: 0 });
         })
         .catch(err => console.log(err));
     };
@@ -91,10 +101,10 @@ export default function SideDrawer({ open, setOpen, setSharedCategoryState }) {
     
         setOpen(isOpen);
         setNewCategory("");
-        setInAddCategoryMode(false);
+        setInAddCategoryModeHelper(false);
         setAddCategoryButtonColor(lightGrey);
         setEditedCategoryText("");
-        setEditState({ inEditMode: false, index: 0 });
+        setEditStateHelper({ inEditMode: false, index: 0 });
     };
 
     const handleAddButtonHighlight = (hover) => {
@@ -103,7 +113,7 @@ export default function SideDrawer({ open, setOpen, setSharedCategoryState }) {
     };
 
     const handleAddCategoryBtnClicked = () => {
-        setInAddCategoryMode(true);
+        setInAddCategoryModeHelper(true);
     };
 
     const handleCategorySelected = (index) => {
@@ -165,7 +175,7 @@ export default function SideDrawer({ open, setOpen, setSharedCategoryState }) {
                         index={index}
                         selectedRow={selectedRow}
                         setUserCategories={setUserCategories}
-                        setEditState={setEditState}
+                        setEditStateHelper={setEditStateHelper}
                         handleCategorySelected={handleCategorySelected}
                     />
                 ))}

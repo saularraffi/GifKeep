@@ -38,7 +38,7 @@ export default function CategoryRow(props) {
     };
 
     const handleEditMode = () => {
-        props.setEditState({ inEditMode: true, index: props.index })
+        props.setEditStateHelper({ inEditMode: true, index: props.index })
     };
 
     const MenuOptions = () => {
