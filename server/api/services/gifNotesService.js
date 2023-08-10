@@ -12,7 +12,6 @@ exports.getGifNotes = async () => {
 exports.getGifNotesByCategory = async (category) => {
     try {
         const gifNotes = await GifNote.find({ category: category }).exec();
-        console.log(gifNotes)
         return gifNotes;
     } catch (error) {
         throw err;  

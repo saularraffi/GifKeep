@@ -33,7 +33,10 @@ export default function CategoryRow(props) {
         categories.splice(props.index, 1);
 
         putUser(userId, username, categories).then(res => res.data)
-        .then(user => props.setUserCategories(user.categories))
+        .then(user => {
+            props.setUserCategories(user.categories);
+            props.setSharedCategoryState("");
+        })
         .catch(err => console.log(err));
     };
 

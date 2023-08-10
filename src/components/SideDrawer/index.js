@@ -90,6 +90,7 @@ export default function SideDrawer({ open, setOpen, setSharedCategoryState }) {
             setUserCategories(user.categories);
             setEditedCategoryText("");
             setEditStateHelper({ inEditMode: false, index: 0 });
+            setSharedCategoryState(editedCategoryText);
         })
         .catch(err => console.log(err));
     };
@@ -177,6 +178,7 @@ export default function SideDrawer({ open, setOpen, setSharedCategoryState }) {
                         setUserCategories={setUserCategories}
                         setEditStateHelper={setEditStateHelper}
                         handleCategorySelected={handleCategorySelected}
+                        setSharedCategoryState={setSharedCategoryState}
                     />
                 ))}
             </List>

@@ -12,7 +12,7 @@ const styles = {
     }
 }
 
-const GifNoteView = ({ sharedPopupState, setSharedPopupState, sharedCategoryState }) => {
+const GifNoteView = ({ sharedPopupState, setSharedPopupState, sharedCategoryState, sharedDrawerState }) => {
     const [gifNotes, setGifNotes] = useState([]);
     const popupRef = useRef();
 
@@ -40,7 +40,7 @@ const GifNoteView = ({ sharedPopupState, setSharedPopupState, sharedCategoryStat
         } else {
             fetchGifNotesByCategory();
         }
-    }, [sharedPopupState, sharedCategoryState])
+    }, [sharedPopupState, sharedCategoryState, sharedDrawerState])
 
     const GifNotesGrid = () => {
         return (
