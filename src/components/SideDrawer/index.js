@@ -177,6 +177,7 @@ export default function SideDrawer({ open, setOpen, setSharedCategoryState }) {
                         setUserCategories={setUserCategories}
                         setEditStateHelper={setEditStateHelper}
                         handleCategorySelected={handleCategorySelected}
+                        setSharedCategoryState={setSharedCategoryState}
                     />
                 ))}
             </List>

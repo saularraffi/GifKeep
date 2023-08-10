@@ -43,6 +43,7 @@ function App() {
           sharedPopupState={sharedPopupState}
           setSharedPopupState={setSharedPopupState}
           sharedCategoryState={sharedCategoryState}
+          sharedDrawerState={sharedDrawerState}
         />
       </ThemeProvider>
     </>
