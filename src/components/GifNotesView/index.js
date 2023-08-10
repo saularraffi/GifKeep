@@ -1,20 +1,19 @@
 import { React, useEffect, useState, useRef } from 'react'
-import { getGifNotes } from '../../services/gifyuApi'
+import { getGifNotes, getGifNotesByCategory } from '../../services/gifyuApi'
 import GifNoteTile from './GifNoteTile'
-import { Container, Grid, Alert } from '@mui/material'
-import AddGifNotePopup from '../TopAppBar/AddGifNotePopup'
+import { Container, Grid, Typography, Box } from '@mui/material'
+import AddEditGifNotePopup from '../popups/AddEditGifNotePopup'
+import Snackbar from './Snackbar'
 
 const styles = {
-    alert: {
-        marginBottom: "30px",
-        width: "30%"
+    categoryDisplay: {
+        fontSize: "2rem",
+        marginBottom: "30px"
     }
 }
 
-const GifNoteView = ({ sharedState, setSharedState }) => {
+const GifNoteView = ({ sharedPopupState, setSharedPopupState, sharedCategoryState, sharedDrawerState }) => {
     const [gifNotes, setGifNotes] = useState([]);
-    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-    const [showErrorAlert, setShowErrorAlert] = useState(false);
     const popupRef = useRef();
 
     const openPopup = (id, description, category, gifUrl) => {
@@ -23,56 +22,28 @@ const GifNoteView = ({ sharedState, setSharedState }) => {
         }
     };
 
+    const fetchAllGifNotes = () => {
+        getGifNotes()
+        .then(res => setGifNotes(res.data))
+        .catch(err => console.log(err));
+    };
+
+    const fetchGifNotesByCategory = () => {
+        getGifNotesByCategory(sharedCategoryState)
+        .then(res => setGifNotes(res.data))
+        .catch(err => console.log(err));
+    };
+
     useEffect(() => {
-        if (sharedState != null) {
-            if (sharedState.status === "SUCCESS") {
-                setShowErrorAlert(false);
-                setShowSuccessAlert(true);
-            } else {
-                setShowErrorAlert(true);
-                setShowSuccessAlert(false);
-            }
+        if (sharedCategoryState === "") {
+            fetchAllGifNotes();
+        } else {
+            fetchGifNotesByCategory();
         }
-        getGifNotes().then(res => {
-            setGifNotes(res.data);
-        });
-    }, [sharedState])
+    }, [sharedPopupState, sharedCategoryState, sharedDrawerState])
 
-    const AlertMessage = () => {
-        const successfulAdd = <Alert severity="success" sx={styles.alert}><strong>Successfully</strong> added GIF Note</Alert>;
-        const failedAdd = <Alert severity="error" sx={styles.alert}><strong>Failed</strong> to add GIF Note!</Alert>
-        const successfulDelete = <Alert severity="success" sx={styles.alert}><strong>Successfully</strong> deleted GIF Note</Alert>;
-        const failedDelete = <Alert severity="error" sx={styles.alert}><strong>Failed</strong> to delete GIF Note!</Alert>
-        const successfulUpdate = <Alert severity="success" sx={styles.alert}><strong>Successfully</strong> updated GIF Note</Alert>;
-        const failedUpdate = <Alert severity="error" sx={styles.alert}><strong>Failed</strong> to updated GIF Note!</Alert>
-
-        if (showSuccessAlert) {
-            if (sharedState.action === "ADD") {
-                return successfulAdd;
-            } else if (sharedState.action === "DELETE") {
-                return successfulDelete;
-            } else {
-                return successfulUpdate;
-            }
-        } else if (showErrorAlert) {
-            if (sharedState.action === "ADD") {
-                return failedAdd;
-            } else if (sharedState.action === "DELETE") {
-                return failedDelete;
-            } else {
-                return failedUpdate;
-            }
-        }
-    }
-
-    const updateSharedState = (data) => {
-        setSharedState(data);
-    }
-
-    return (
-        <Container style={{maxWidth: "100rem"}}>
-            <AlertMessage />
-            <AddGifNotePopup ref={popupRef} updateSharedState={updateSharedState} mode={"UPDATE"}/>
+    const GifNotesGrid = () => {
+        return (
             <Grid container spacing={2}>
                 {gifNotes.map(gifNote => (
                     <Grid key={gifNote._id} item xs={12} sm={6} md={4} lg={3}>
@@ -82,12 +53,48 @@ const GifNoteView = ({ sharedState, setSharedState }) => {
                             note={gifNote.note} 
                             category={gifNote.category}
                             gifUrl={gifNote.gifUrl}
-                            setSharedState={setSharedState}
+                            setSharedPopupState={setSharedPopupState}
                             openPopup={openPopup}
                         />
                     </Grid>
                 ))}
             </Grid>
+        )
+    };
+
+    const NoGifNotesMessage = () => {
+        return (
+            <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                minHeight="50vh"
+            >
+                <Typography sx={{ fontSize: "1.2rem" }}>No notes in this category</Typography>
+            </Box>
+        )
+    };
+
+    const CategoryDisplay = () => {
+        return (
+            <Box sx={{ display: "flex" }}>
+                <Typography sx={styles.categoryDisplay}>Category:</Typography>
+                <Typography sx={{ ...styles.categoryDisplay, marginLeft: "15px" }}>
+                    {sharedCategoryState === "" ? "All" : sharedCategoryState}
+                </Typography>
+            </Box>
+        )
+    };
+
+    return (
+        <Container style={{ maxWidth: "100rem", marginTop: "30px" }}>
+            <Snackbar sharedPopupState={sharedPopupState}/>
+            <AddEditGifNotePopup ref={popupRef} setSharedPopupState={setSharedPopupState} mode={"UPDATE"}/>
+            <CategoryDisplay />
+            { gifNotes.length > 0 ?
+                <GifNotesGrid /> :
+                <NoGifNotesMessage />
+            }
         </Container>
     )
 }

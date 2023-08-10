@@ -5,30 +5,33 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { Typography } from '@mui/material';
-import AddGifNotePopup from './AddGifNotePopup';
+import AddEditGifNotePopup from '../popups/AddEditGifNotePopup';
+import MenuIcon from '@mui/icons-material/Menu';
 
-const TopAppBar = ({ onStateChange }) => {
+const TopAppBar = ({ setSharedPopupState, openDrawer }) => {
     const popupRef = useRef();
 
     const openPopup = () => {
         if (popupRef.current) {
-            popupRef.current.handleOpen("", "", "");
+            popupRef.current.handleOpen();
         }
     };
 
-    const updateSharedState = (data) => {
-        onStateChange(data);
+    const handleMenuClick = () => {
+        openDrawer(true)
     };
 
     const CustomToolbar = () => {
         return (
             <Toolbar>
-                <Typography sx={{ fontSize: "2rem" }}>GifKeep</Typography>
+                <IconButton size='large' onClick={handleMenuClick}>
+                    <MenuIcon sx={{ fontSize: "2.5rem", color: "white" }} />
+                </IconButton>
+                <Typography sx={{ marginLeft: "15px", fontSize: "2rem" }}>GifKeep</Typography>
                 <IconButton
                     size="large"
                     edge="start"
                     color="inherit"
-                    aria-label="menu"
                     onClick={openPopup}
                     sx={{ mr: 2, marginLeft: "auto" }}
                 >
@@ -39,8 +42,8 @@ const TopAppBar = ({ onStateChange }) => {
     }
 
     return (
-        <Box sx={{ flexGrow: 1, marginBottom: "50px" }}>
-            <AddGifNotePopup ref={popupRef} updateSharedState={updateSharedState} mode={"ADD"}/>
+        <Box sx={{ flexGrow: 1 }}>
+            <AddEditGifNotePopup ref={popupRef} setSharedPopupState={setSharedPopupState} mode={"ADD"}/>
             <AppBar position="static">
                 <CustomToolbar />
             </AppBar>

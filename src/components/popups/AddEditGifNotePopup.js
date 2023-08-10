@@ -1,5 +1,15 @@
 import { React, useState, forwardRef, useImperativeHandle } from 'react'
-import { Box, Modal, Typography, TextField, Button  } from '@mui/material';
+import { 
+    Box,
+    Modal,
+    Typography,
+    TextField,
+    Button,
+    FormControl,
+    Select,
+    MenuItem,
+    InputLabel
+} from '@mui/material';
 import { postGifNote } from '../../services/gifyuApi';
 import { putGifNote } from '../../services/gifyuApi';
 
@@ -28,12 +38,14 @@ const style = {
     }
 };
 
-const AddGifNotePopup = forwardRef((props, ref) => {
+const AddGifNotePopup = forwardRef(({setSharedPopupState, mode}, ref) => {
     const [id, setId] = useState("");
     const [description, setDescription] = useState("");
     const [category, setCategory] = useState("");
     const [gifUrl, setGifUrl] = useState("");
     const [open, setOpen] = useState(false);
+
+    const categories = localStorage.getItem("categories").split(",");
     
     const handleOpen = (id, description, category, gifUrl) => {
         setId(id);
@@ -49,20 +61,24 @@ const AddGifNotePopup = forwardRef((props, ref) => {
         setGifUrl("");
         setOpen(false);
     }
+    
+    const handleCategorySelection = (event) => {
+        setCategory(event.target.value);
+    };
 
     useImperativeHandle(ref, () => ({
         handleOpen,
     }));
 
     const addGifNote = () => {
-        postGifNote(description, category, gifUrl).then(res => {
-            props.updateSharedState({
+        postGifNote(description, category.trim(), gifUrl).then(res => {
+            setSharedPopupState({
                 id: res.data._id,
                 action: "ADD",
                 status: "SUCCESS"
             });
         }).catch(err => {
-            props.updateSharedState({
+            setSharedPopupState({
                 error: err,
                 action: "ADD",
                 status: "FAILED"
@@ -73,16 +89,16 @@ const AddGifNotePopup = forwardRef((props, ref) => {
     }
 
     const updateGifNote = () => {
-        putGifNote(id, description, category, gifUrl).then(res => {
-            props.updateSharedState({
+        putGifNote(id, description, category.trim(), gifUrl).then(res => {
+            setSharedPopupState({
                 id: res.data._id,
-                action: "UPDATE",
+                action: "EDIT",
                 status: "SUCCESS"
             });
         }).catch(err => {
-            props.updateSharedState({
+            setSharedPopupState({
                 error: err,
-                action: "UPDATE",
+                action: "EDIT",
                 status: "FAILED"
             });
             console.log(err);
@@ -91,7 +107,7 @@ const AddGifNotePopup = forwardRef((props, ref) => {
     }
 
     const SubmitButton = () => {
-        if (props.mode === "UPDATE") {
+        if (mode === "UPDATE") {
             return <Button onClick={updateGifNote} variant="contained" sx={style.buttons}>Update</Button>
         } else {
             return <Button onClick={addGifNote} variant="contained" sx={style.buttons}>Add</Button>
@@ -109,36 +125,43 @@ const AddGifNotePopup = forwardRef((props, ref) => {
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                     Add GIF Note
                 </Typography>
-                <div>
-                    <TextField 
-                        onChange={(e) => setDescription(e.target.value)} 
-                        value={description} 
-                        label="Description" 
-                        variant="standard"
-                        autoComplete="off"
-                        sx={style.inputField}>
-                    </TextField>
-                </div>
-                <div>
-                    <TextField
-                        onChange={(e) => setCategory(e.target.value)} 
-                        value={category} 
-                        label="Category" 
-                        variant="standard"
-                        autoComplete="off"
-                        sx={style.inputField}>
-                    </TextField>
-                </div>
-                <div>
-                    <TextField 
-                        onChange={(e) => setGifUrl(e.target.value)} 
-                        value={gifUrl} 
-                        label="GIF URL" 
-                        variant="standard"
-                        autoComplete="off"
-                        sx={style.inputField}>
-                    </TextField>
-                </div>
+                <TextField
+                    defaultValue={description}
+                    onChange={(e) => setDescription(e.target.value)} 
+                    value={description} 
+                    label="Description" 
+                    variant="standard"
+                    autoComplete="off"
+                    sx={style.inputField}>
+                </TextField>
+                <FormControl variant="standard" sx={{ width: "50%" }}>
+                    <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                    <Select
+                        defaultValue={category}
+                        value={category}
+                        label="Category"
+                        onChange={handleCategorySelection}
+                        renderValue={() => <em>{category}</em>}
+                    >
+                        {categories.map((categoryName, index) => {
+                            return <MenuItem
+                                        key={`${index}-${categoryName}`}
+                                        value={categoryName}
+                                    >
+                                            {categoryName}
+                                    </MenuItem>
+                        })}
+                    </Select>
+                </FormControl>
+                <TextField
+                    defaultValue={gifUrl}
+                    onChange={(e) => setGifUrl(e.target.value)} 
+                    value={gifUrl} 
+                    label="GIF URL" 
+                    variant="standard"
+                    autoComplete="off"
+                    sx={style.inputField}>
+                </TextField>
                 <SubmitButton />
                 <Button onClick={handleClose} sx={style.buttons}>Cancel</Button>
             </Box>

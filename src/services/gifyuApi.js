@@ -11,6 +11,15 @@ export function getGifNotes() {
     }
 }
 
+export function getGifNotesByCategory(category) {
+    try {
+        const response = axios.get(`${baseUrl}?category=${category}`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
 export function postGifNote(description, category, gifUrl) {
     try {
         const response = axios.post(baseUrl, {

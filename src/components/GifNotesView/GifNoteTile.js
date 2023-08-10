@@ -17,7 +17,7 @@ const styles = {
     }
 }
 
-const GifNoteTile = ({id, note, category, gifUrl, setSharedState, openPopup}) => {
+const GifNoteTile = ({id, note, category, gifUrl, setSharedPopupState, openPopup}) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     
@@ -31,13 +31,13 @@ const GifNoteTile = ({id, note, category, gifUrl, setSharedState, openPopup}) =>
 
     const handleDelete = () => {
         deleteGifNote(id).then(res => {
-            setSharedState({
+            setSharedPopupState({
                 id: res,
                 action: "DELETE",
                 status: "SUCCESS"
             });
         }).catch(err => {
-            setSharedState({
+            setSharedPopupState({
                 error: err,
                 action: "DELETE",
                 status: "FAILED"
@@ -54,12 +54,12 @@ const GifNoteTile = ({id, note, category, gifUrl, setSharedState, openPopup}) =>
     const MenuOptions = () => {
         return (
             <>
-                <MenuItem onClick={handleDelete}>
-                    <Typography sx={{ fontFamily: "Kanit", color: "red" }}>DELETE</Typography>
-                </MenuItem>
                 <MenuItem onClick={handleEdit}>
                     <Typography sx={{ fontFamily: "Kanit", color: "blue" }}>EDIT</Typography>
                 </MenuItem>  
+                <MenuItem onClick={handleDelete}>
+                    <Typography sx={{ fontFamily: "Kanit", color: "red" }}>DELETE</Typography>
+                </MenuItem>
             </>
         )
     };
