@@ -35,7 +35,6 @@ export default function CategoryRow(props) {
         putUser(userId, username, categories).then(res => res.data)
         .then(user => {
             props.setUserCategories(user.categories);
-            props.setSharedCategoryState("");
         })
         .catch(err => console.log(err));
     };

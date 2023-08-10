@@ -7,6 +7,20 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
+const message = {
+    success: {
+        add: "Successfully added GIF Note",
+        delete: "Successfully deleted GIF Note",
+        edit: "Successfully edited GIF Note",
+    },
+    error: {
+        get: "Failed to get GIF Notes!",
+        add: "Failed to add GIF Note!",
+        delete: "Failed to delete GIF Note!",
+        edit: "Failed to edit GIF Note!"
+    }
+}
+
 export default function Snackbar({ sharedPopupState }) {
     const [open, setOpen] = React.useState(false);
 
@@ -27,19 +41,7 @@ export default function Snackbar({ sharedPopupState }) {
     const FormattedAlert = () => {
         const severity = sharedPopupState.status === "SUCCESS" ? "success" : "error";
         const action = sharedPopupState.action.toLowerCase();
-        const message = {
-            success: {
-                add: "Successfully added GIF Note",
-                delete: "Successfully deleted GIF Note",
-                edit: "Successfully edited GIF Note",
-            },
-            error: {
-                get: "Failed to get GIF Notes!",
-                add: "Failed to add GIF Note!",
-                delete: "Failed to delete GIF Note!",
-                edit: "Failed to edit GIF Note!"
-            }
-        }
+    
         return (
             <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
                 {message[severity][action]}
