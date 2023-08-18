@@ -29,7 +29,8 @@ function App() {
 
   return (
     <>
-      <ThemeProvider theme={theme}>
+      <video controls style={{ width: "1000px" }} src="http://localhost:8080/api/video"></video>
+      {/* <ThemeProvider theme={theme}>
         <TopAppBar
           setSharedPopupState={setSharedPopupState}
           openDrawer={setSharedDrawerState}
@@ -45,7 +46,7 @@ function App() {
           sharedCategoryState={sharedCategoryState}
           sharedDrawerState={sharedDrawerState}
         />
-      </ThemeProvider>
+      </ThemeProvider> */}
     </>
   );
 }

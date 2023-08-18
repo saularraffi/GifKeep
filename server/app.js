@@ -8,6 +8,7 @@ const config = require('./config')
 // requiring routes
 const gifNotesController = require("./api/controllers/gifNotesController");
 const usersController = require("./api/controllers/userController");
+const videoController = require("./api/controllers/videoController");
 
 require('dotenv').config();
 
@@ -20,6 +21,7 @@ app.use(bodyParser.json());
 // using routes in app
 app.use(gifNotesController);
 app.use(usersController);
+app.use(videoController);
 
 mongoose.connect(config.db.connectionString, config.db.options)
 .then(() => {
