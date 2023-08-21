@@ -26,10 +26,11 @@ exports.getVideo = (callback) => {
     });
 };
 
-exports.getVideoStream = (res) => {
+exports.getVideoStream = (res, range) => {
     const params = {
         Bucket: "dance-keep-videos",
         Key: "stream_test.mp4",
+        Range: range,
     };
 
     s3.headObject(params, function (err, data) {
@@ -37,20 +38,36 @@ exports.getVideoStream = (res) => {
             console.error(err);
         }
 
-        const stream = s3.getObject(params).createReadStream();
+        // replace with value from db
+        const videoSize = 33807403;
+        const chunkSize = 1 * 1e6;
+        const start = Number(range.replace(/\D/g, ""));
+        const end = Math.min(start + chunkSize, videoSize - 1);
+        const contentLength = end - start + 1;
 
-        stream.on("error", function error(err) {
-            console.log(err);
-        });
+        console.log(
+            `start=${start} end=${end} ${range} vidSize=${videoSize} contLen=${contentLength}`
+        );
 
         // res.set("Content-Type", mime.lookup(key));
+        res.set("Content-Range", `bytes ${start}-${end}/${videoSize}`);
         res.set("Content-Type", "video/mp4");
-        res.set("Content-Length", data.ContentLength);
+        res.set("Content-Length", contentLength);
         res.set("Last-Modified", data.LastModified);
         res.set("ETag", data.ETag);
 
+        res.writeHead(206);
+
+        const stream = s3.getObject(params).createReadStream();
+
+        stream.on("error", function error(err) {
+            console.log("\n[-] Stream error\n");
+            console.log(err);
+            return;
+        });
+
         stream.on("end", () => {
-            console.log("Stream finished");
+            console.log("\n[+] Stream finished\n");
         });
 
         stream.pipe(res);

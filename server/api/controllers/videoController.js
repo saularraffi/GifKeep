@@ -23,6 +23,10 @@ router.get(endpoint, (req, res) => {
 
     const contentLength = end - start + 1;
 
+    console.log(
+        `start=${start} end=${end} ${range} vidSize=${videoSize} contLen=${contentLength}`
+    );
+
     const headers = {
         "Content-Range": `bytes ${start}-${end}/${videoSize}`,
         "Accept-Ranges": "bytes",
@@ -61,7 +65,7 @@ router.get(`${endpoint}/stream`, (req, res) => {
         return;
     }
 
-    wasabiService.getVideoStream(res);
+    wasabiService.getVideoStream(res, range);
 });
 
 module.exports = router;
