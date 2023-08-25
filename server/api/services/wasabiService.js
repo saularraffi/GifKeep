@@ -2,19 +2,19 @@ const AWS = require("aws-sdk");
 
 const accessKeyId = "4A06I973DO6OA4EDM5M0";
 const secretAccessKey = "TBaCrRX6Asi62p3ffIC6ozSFdqanJ7ylrHKFKztv";
-
 const wasabiEndpoint = new AWS.Endpoint("s3.wasabisys.com");
-const s3 = new AWS.S3({
-    endpoint: wasabiEndpoint,
-    accessKeyId: accessKeyId,
-    secretAccessKey: secretAccessKey,
-});
 
 exports.getVideo = (callback) => {
     const params = {
         Bucket: "dance-keep-videos",
         Key: "stream_test.mp4",
     };
+
+    const s3 = new AWS.S3({
+        endpoint: wasabiEndpoint,
+        accessKeyId: accessKeyId,
+        secretAccessKey: secretAccessKey,
+    });
 
     s3.getObject(params, function (err, data) {
         if (!err) {
@@ -26,12 +26,18 @@ exports.getVideo = (callback) => {
     });
 };
 
-exports.getVideoStream = (res, range) => {
+exports.getVideoStream = async (res, range) => {
     const params = {
         Bucket: "dance-keep-videos",
         Key: "stream_test.mp4",
         Range: range,
     };
+
+    const s3 = new AWS.S3({
+        endpoint: wasabiEndpoint,
+        accessKeyId: accessKeyId,
+        secretAccessKey: secretAccessKey,
+    });
 
     s3.headObject(params, function (err, data) {
         if (err) {
@@ -68,6 +74,7 @@ exports.getVideoStream = (res, range) => {
 
         stream.on("end", () => {
             console.log("\n[+] Stream finished\n");
+            stream.end();
         });
 
         stream.pipe(res);

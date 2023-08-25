@@ -4,7 +4,7 @@ const stream = require("stream");
 const router = express.Router();
 const fs = require("fs");
 
-const endpoint = "/api/video";
+const endpoint = "/api/videos";
 
 router.get(endpoint, (req, res) => {
     const range = req.headers.range;
