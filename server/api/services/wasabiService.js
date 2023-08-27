@@ -3,18 +3,25 @@ const AWS = require("aws-sdk");
 const accessKeyId = "4A06I973DO6OA4EDM5M0";
 const secretAccessKey = "TBaCrRX6Asi62p3ffIC6ozSFdqanJ7ylrHKFKztv";
 const wasabiEndpoint = new AWS.Endpoint("s3.wasabisys.com");
+const s3Config = {
+    endpoint: wasabiEndpoint,
+    accessKeyId: accessKeyId,
+    secretAccessKey: secretAccessKey,
+};
+const s3 = new AWS.S3({
+    ...s3Config,
+    httpOptions: {
+        timeout: 60_000,
+    },
+});
 
 exports.getVideo = (callback) => {
     const params = {
         Bucket: "dance-keep-videos",
-        Key: "stream_test.mp4",
+        Key: "test.txt",
     };
 
-    const s3 = new AWS.S3({
-        endpoint: wasabiEndpoint,
-        accessKeyId: accessKeyId,
-        secretAccessKey: secretAccessKey,
-    });
+    const s3 = new AWS.S3({ ...s3Config });
 
     s3.getObject(params, function (err, data) {
         if (!err) {
@@ -26,28 +33,25 @@ exports.getVideo = (callback) => {
     });
 };
 
-exports.getVideoStream = async (res, range) => {
+function getStartFromRange(range) {
+    const rangeNum = range.replace("bytes=", "").split("-")[0];
+    return Number(rangeNum?.replace(/\D/g, ""));
+}
+
+exports.getVideoStream = async (req, res, range) => {
     const params = {
         Bucket: "dance-keep-videos",
         Key: "stream_test.mp4",
-        Range: range,
     };
-
-    const s3 = new AWS.S3({
-        endpoint: wasabiEndpoint,
-        accessKeyId: accessKeyId,
-        secretAccessKey: secretAccessKey,
-    });
 
     s3.headObject(params, function (err, data) {
         if (err) {
             console.error(err);
         }
 
-        // replace with value from db
-        const videoSize = 33807403;
+        const videoSize = data.ContentLength;
         const chunkSize = 1 * 1e6;
-        const start = Number(range.replace(/\D/g, ""));
+        const start = getStartFromRange(range);
         const end = Math.min(start + chunkSize, videoSize - 1);
         const contentLength = end - start + 1;
 
@@ -64,19 +68,24 @@ exports.getVideoStream = async (res, range) => {
 
         res.writeHead(206);
 
-        const stream = s3.getObject(params).createReadStream();
+        const stream = s3
+            .getObject({ ...params, Range: range })
+            .createReadStream({ start, end });
 
         stream.on("error", function error(err) {
             console.log("\n[-] Stream error\n");
-            console.log(err);
-            return;
+            // console.log(err);
+            // return;
         });
 
         stream.on("end", () => {
             console.log("\n[+] Stream finished\n");
             stream.end();
+            return "done";
         });
 
-        stream.pipe(res);
+        // req.on("close", () => stream.end());
+
+        return stream.pipe(res);
     });
 };

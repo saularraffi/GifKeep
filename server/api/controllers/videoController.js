@@ -1,71 +1,81 @@
 const express = require("express");
-const wasabiService = require("../services/wasabiService");
-const stream = require("stream");
 const router = express.Router();
-const fs = require("fs");
+const AWS = require("aws-sdk");
 
 const endpoint = "/api/videos";
 
-router.get(endpoint, (req, res) => {
-    const range = req.headers.range;
+const accessKeyId = "4A06I973DO6OA4EDM5M0";
+const secretAccessKey = "TBaCrRX6Asi62p3ffIC6ozSFdqanJ7ylrHKFKztv";
+const wasabiEndpoint = new AWS.Endpoint("s3.wasabisys.com");
 
-    if (!range) {
-        res.status(400).send("Requires Range header");
-        return;
-    }
-
-    const videoPath = "./videos/stream_test.mp4";
-    const videoSize = fs.statSync(videoPath).size;
-
-    const chunkSize = 1 * 1e6;
-    const start = Number(range.replace(/\D/g, ""));
-    const end = Math.min(start + chunkSize, videoSize - 1);
-
-    const contentLength = end - start + 1;
-
-    console.log(
-        `start=${start} end=${end} ${range} vidSize=${videoSize} contLen=${contentLength}`
-    );
-
-    const headers = {
-        "Content-Range": `bytes ${start}-${end}/${videoSize}`,
-        "Accept-Ranges": "bytes",
-        "Content-Length": contentLength,
-        "Content-Type": "video/mp4",
-    };
-    res.writeHead(206, headers);
-
-    const stream = fs.createReadStream(videoPath, { start, end });
-    stream.pipe(res);
+const s3 = new AWS.S3({
+    endpoint: wasabiEndpoint,
+    accessKeyId: accessKeyId,
+    secretAccessKey: secretAccessKey,
+    httpOptions: {
+        timeout: 60_000,
+    },
 });
 
-router.get(`${endpoint}/download`, (req, res) => {
-    wasabiService.getVideo((data) => {
-        const bytes = data.Body;
-        const bytesLength = Buffer.byteLength(bytes);
-        const bytesString = String.fromCharCode(...bytes);
+function getVideoStream(params, range) {
+    const videoObjectParams = range ? { ...params, Range: range } : params;
 
-        const buffer = new Buffer(bytes, "base64");
-        const readable = new stream.Readable();
-        readable._read = () => {};
-        readable.push(buffer);
-        readable.push(null);
+    const videoObject = s3.getObject(videoObjectParams);
+    const videoStream = videoObject.createReadStream();
 
-        console.log(buffer);
-        console.log(`file content: ${bytesString}`);
+    videoStream.on("end", () => {
+        console.log("[+] Stream finished");
     });
-    res.send("OK");
-});
+
+    videoStream.on("error", () => {
+        console.log("[-] Stream error");
+    });
+
+    return videoStream;
+}
 
 router.get(`${endpoint}/stream`, (req, res) => {
-    const range = req.headers.range;
+    const { range } = req.headers;
 
-    if (!range) {
-        res.status(400).send("Requires Range header");
-        return;
-    }
+    const params = {
+        Bucket: "dance-keep-videos",
+        Key: "stream_test.mp4",
+    };
 
-    wasabiService.getVideoStream(res, range);
+    s3.headObject(params, function (err, data) {
+        if (err) {
+            console.error(err);
+        }
+
+        const videoStream = getVideoStream(params, range);
+
+        if (range) {
+            const parts = range.replace(/bytes=/, "").split("-");
+            const start = parseInt(parts[0], 10);
+            const end = parts[1]
+                ? parseInt(parts[1], 10)
+                : data.ContentLength - 1;
+            const contentLength = end - start + 1;
+
+            const headers = {
+                "Content-Range": `bytes ${start}-${end}/${data.ContentLength}`,
+                "Accept-Ranges": "bytes",
+                "Content-Length": contentLength,
+                "Content-Type": "video/mp4",
+            };
+
+            res.writeHead(206, headers);
+            videoStream.pipe(res);
+        } else {
+            const headers = {
+                "Content-Length": data.ContentLength,
+                "Content-Type": "video/mp4",
+            };
+
+            res.writeHead(200, headers);
+            videoStream.pipe(res);
+        }
+    });
 });
 
 module.exports = router;

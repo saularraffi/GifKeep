@@ -33,7 +33,7 @@ function App() {
             <video
                 controls
                 style={{ width: "1000px" }}
-                src="http://localhost:8080/api/videos"
+                src="http://localhost:8080/api/videos/stream"
             ></video>
             {/* <ThemeProvider theme={theme}>
         <TopAppBar
