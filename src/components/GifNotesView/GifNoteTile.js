@@ -99,13 +99,12 @@ const GifNoteTile = ({
                 </Menu>
             </Box>
 
-            <Box onClick={playVideo}>
+            <Box>
                 {videoIsPlaying ? (
                     <video
                         controls
                         style={{ width: "100%", height: "100%" }}
                         src="http://localhost:8080/api/videos/stream_test"
-                        // src={gifUrl}
                         autoPlay
                     ></video>
                 ) : (
@@ -113,6 +112,7 @@ const GifNoteTile = ({
                         style={{ width: "100%", height: "100%" }}
                         src="http://localhost:8080/api/videos/thumbnail/placeholder"
                         alt="placeholder"
+                        onClick={playVideo}
                     />
                 )}
             </Box>
