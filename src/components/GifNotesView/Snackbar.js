@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { Stack, Box } from '@mui/material';
-import { default as MuiSnackbar } from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import * as React from "react";
+import { Stack, Box } from "@mui/material";
+import { default as MuiSnackbar } from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -17,9 +17,9 @@ const message = {
         get: "Failed to get GIF Notes!",
         add: "Failed to add GIF Note!",
         delete: "Failed to delete GIF Note!",
-        edit: "Failed to edit GIF Note!"
-    }
-}
+        edit: "Failed to edit GIF Note!",
+    },
+};
 
 export default function Snackbar({ sharedPopupState }) {
     const [open, setOpen] = React.useState(false);
@@ -28,10 +28,10 @@ export default function Snackbar({ sharedPopupState }) {
         if (sharedPopupState != null) {
             setOpen(true);
         }
-    }, [sharedPopupState])
+    }, [sharedPopupState]);
 
     const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
+        if (reason === "clickaway") {
             return;
         }
 
@@ -39,19 +39,28 @@ export default function Snackbar({ sharedPopupState }) {
     };
 
     const FormattedAlert = () => {
-        const severity = sharedPopupState.status === "SUCCESS" ? "success" : "error";
+        const severity =
+            sharedPopupState.status === "SUCCESS" ? "success" : "error";
         const action = sharedPopupState.action.toLowerCase();
-    
+
         return (
-            <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
+            <Alert
+                onClose={handleClose}
+                severity={severity}
+                sx={{ width: "100%" }}
+            >
                 {message[severity][action]}
             </Alert>
-        )
+        );
     };
 
     return (
-        <Stack spacing={2} sx={{ width: '100%' }}>
-            <MuiSnackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Stack spacing={2} sx={{ width: "100%" }}>
+            <MuiSnackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+            >
                 <Box>
                     <FormattedAlert />
                 </Box>

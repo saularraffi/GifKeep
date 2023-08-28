@@ -1,16 +1,16 @@
-import * as React from 'react';
+import * as React from "react";
 import {
-    ListItem, 
+    ListItem,
     ListItemButton,
     ListItemText,
     ListItemIcon,
     IconButton,
     Menu,
     MenuItem,
-    Typography
-} from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { putUser } from '../../services/usersApi';
+    Typography,
+} from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { putUser } from "../../services/usersApi";
 
 export default function CategoryRow(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -21,7 +21,7 @@ export default function CategoryRow(props) {
     const handleCategoryOptionClick = (event, index) => {
         setAnchorEl(event.currentTarget);
     };
-    
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -32,15 +32,16 @@ export default function CategoryRow(props) {
         const categories = localStorage.getItem("categories").split(",");
         categories.splice(props.index, 1);
 
-        putUser(userId, username, categories).then(res => res.data)
-        .then(user => {
-            props.setUserCategories(user.categories);
-        })
-        .catch(err => console.log(err));
+        putUser(userId, username, categories)
+            .then((res) => res.data)
+            .then((user) => {
+                props.setUserCategories(user.categories);
+            })
+            .catch((err) => console.log(err));
     };
 
     const handleEditMode = () => {
-        props.setEditStateHelper({ inEditMode: true, index: props.index })
+        props.setEditStateHelper({ inEditMode: true, index: props.index });
     };
 
     const disableRowButton = () => {
@@ -61,28 +62,40 @@ export default function CategoryRow(props) {
         return (
             <>
                 <MenuItem onClick={handleEditMode}>
-                    <Typography sx={{ fontFamily: "Kanit", color: "blue" }}>EDIT</Typography>
-                </MenuItem>  
+                    <Typography sx={{ fontFamily: "Kanit" }}>EDIT</Typography>
+                </MenuItem>
                 <MenuItem onClick={handleDelete}>
-                    <Typography sx={{ fontFamily: "Kanit", color: "red" }}>DELETE</Typography>
+                    <Typography sx={{ fontFamily: "Kanit", color: "red" }}>
+                        DELETE
+                    </Typography>
                 </MenuItem>
             </>
-        )
+        );
     };
 
     return (
         <ListItem
             key={props.text}
             disablePadding
-            sx={{ backgroundColor: props.selectedRow == props.index ? selectedColor : 'inherit' }}
+            sx={{
+                backgroundColor:
+                    props.selectedRow == props.index
+                        ? selectedColor
+                        : "inherit",
+            }}
         >
-            <ListItemButton onClick={handleCategorySelected} sx={{ paddingRight: 0 }}>
+            <ListItemButton
+                onClick={handleCategorySelected}
+                sx={{ paddingRight: 0 }}
+            >
                 <ListItemText primary={props.text} />
                 <ListItemIcon sx={{ minWidth: 0 }}>
                     <IconButton
                         onMouseEnter={disableRowButton}
                         onMouseLeave={enableRowButton}
-                        onClick={(event) => handleCategoryOptionClick(event, props.index)}
+                        onClick={(event) =>
+                            handleCategoryOptionClick(event, props.index)
+                        }
                     >
                         <MoreVertIcon />
                     </IconButton>
@@ -92,7 +105,7 @@ export default function CategoryRow(props) {
                         open={open}
                         onClose={handleClose}
                         MenuListProps={{
-                            'aria-labelledby': 'basic-button',
+                            "aria-labelledby": "basic-button",
                         }}
                     >
                         <MenuOptions />
@@ -100,5 +113,5 @@ export default function CategoryRow(props) {
                 </ListItemIcon>
             </ListItemButton>
         </ListItem>
-    )
+    );
 }

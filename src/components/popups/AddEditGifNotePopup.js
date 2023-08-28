@@ -1,5 +1,5 @@
-import { React, useState, forwardRef, useImperativeHandle } from 'react'
-import { 
+import { React, useState, forwardRef, useImperativeHandle } from "react";
+import {
     Box,
     Modal,
     Typography,
@@ -8,37 +8,37 @@ import {
     FormControl,
     Select,
     MenuItem,
-    InputLabel
-} from '@mui/material';
-import { postGifNote } from '../../services/gifyuApi';
-import { putGifNote } from '../../services/gifyuApi';
+    InputLabel,
+} from "@mui/material";
+import { postGifNote } from "../../services/gifyuApi";
+import { putGifNote } from "../../services/gifyuApi";
 
 const style = {
     root: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
         width: 500,
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
+        bgcolor: "background.paper",
+        border: "2px solid #000",
         boxShadow: 24,
         p: 4,
     },
     inputField: {
         width: "100%",
         marginTop: "10px",
-        marginBottom: "10px"
+        marginBottom: "10px",
     },
     buttons: {
         marginTop: "10px",
         marginLeft: "15px",
         float: "right",
-        fontSize: "1rem"
-    }
+        fontSize: "1rem",
+    },
 };
 
-const AddGifNotePopup = forwardRef(({setSharedPopupState, mode}, ref) => {
+const AddGifNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     const [id, setId] = useState("");
     const [description, setDescription] = useState("");
     const [category, setCategory] = useState("");
@@ -46,22 +46,22 @@ const AddGifNotePopup = forwardRef(({setSharedPopupState, mode}, ref) => {
     const [open, setOpen] = useState(false);
 
     const categories = localStorage.getItem("categories").split(",");
-    
+
     const handleOpen = (id, description, category, gifUrl) => {
         setId(id);
         setDescription(description);
         setCategory(category);
         setGifUrl(gifUrl);
         setOpen(true);
-    }
+    };
 
     const handleClose = () => {
         setDescription("");
         setCategory("");
         setGifUrl("");
         setOpen(false);
-    }
-    
+    };
+
     const handleCategorySelection = (event) => {
         setCategory(event.target.value);
     };
@@ -71,48 +71,68 @@ const AddGifNotePopup = forwardRef(({setSharedPopupState, mode}, ref) => {
     }));
 
     const addGifNote = () => {
-        postGifNote(description, category.trim(), gifUrl).then(res => {
-            setSharedPopupState({
-                id: res.data._id,
-                action: "ADD",
-                status: "SUCCESS"
+        postGifNote(description, category.trim(), gifUrl)
+            .then((res) => {
+                setSharedPopupState({
+                    id: res.data._id,
+                    action: "ADD",
+                    status: "SUCCESS",
+                });
+            })
+            .catch((err) => {
+                setSharedPopupState({
+                    error: err,
+                    action: "ADD",
+                    status: "FAILED",
+                });
+                console.log(err);
             });
-        }).catch(err => {
-            setSharedPopupState({
-                error: err,
-                action: "ADD",
-                status: "FAILED"
-            });
-            console.log(err);
-        })
         handleClose();
-    }
+    };
 
-    const updateGifNote = () => {
-        putGifNote(id, description, category.trim(), gifUrl).then(res => {
-            setSharedPopupState({
-                id: res.data._id,
-                action: "EDIT",
-                status: "SUCCESS"
+    const updateGifNote = (e) => {
+        putGifNote(id, description, category.trim(), gifUrl)
+            .then((res) => {
+                setSharedPopupState({
+                    id: res.data._id,
+                    action: "EDIT",
+                    status: "SUCCESS",
+                });
+            })
+            .catch((err) => {
+                setSharedPopupState({
+                    error: err,
+                    action: "EDIT",
+                    status: "FAILED",
+                });
+                console.log(err);
             });
-        }).catch(err => {
-            setSharedPopupState({
-                error: err,
-                action: "EDIT",
-                status: "FAILED"
-            });
-            console.log(err);
-        })
         handleClose();
-    }
+    };
 
     const SubmitButton = () => {
         if (mode === "UPDATE") {
-            return <Button onClick={updateGifNote} variant="contained" sx={style.buttons}>Update</Button>
+            return (
+                <Button
+                    onClick={updateGifNote}
+                    variant="contained"
+                    sx={style.buttons}
+                >
+                    Update
+                </Button>
+            );
         } else {
-            return <Button onClick={addGifNote} variant="contained" sx={style.buttons}>Add</Button>
+            return (
+                <Button
+                    onClick={addGifNote}
+                    variant="contained"
+                    sx={style.buttons}
+                >
+                    Add
+                </Button>
+            );
         }
-    }
+    };
 
     return (
         <Modal
@@ -127,15 +147,17 @@ const AddGifNotePopup = forwardRef(({setSharedPopupState, mode}, ref) => {
                 </Typography>
                 <TextField
                     defaultValue={description}
-                    onChange={(e) => setDescription(e.target.value)} 
-                    value={description} 
-                    label="Description" 
+                    onChange={(e) => setDescription(e.target.value)}
+                    value={description}
+                    label="Description"
                     variant="standard"
                     autoComplete="off"
-                    sx={style.inputField}>
-                </TextField>
+                    sx={style.inputField}
+                ></TextField>
                 <FormControl variant="standard" sx={{ width: "50%" }}>
-                    <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                    <InputLabel id="demo-simple-select-label">
+                        Category
+                    </InputLabel>
                     <Select
                         defaultValue={category}
                         value={category}
@@ -144,29 +166,33 @@ const AddGifNotePopup = forwardRef(({setSharedPopupState, mode}, ref) => {
                         renderValue={() => <em>{category}</em>}
                     >
                         {categories.map((categoryName, index) => {
-                            return <MenuItem
-                                        key={`${index}-${categoryName}`}
-                                        value={categoryName}
-                                    >
-                                            {categoryName}
-                                    </MenuItem>
+                            return (
+                                <MenuItem
+                                    key={`${index}-${categoryName}`}
+                                    value={categoryName}
+                                >
+                                    {categoryName}
+                                </MenuItem>
+                            );
                         })}
                     </Select>
                 </FormControl>
                 <TextField
                     defaultValue={gifUrl}
-                    onChange={(e) => setGifUrl(e.target.value)} 
-                    value={gifUrl} 
-                    label="GIF URL" 
+                    onChange={(e) => setGifUrl(e.target.value)}
+                    value={gifUrl}
+                    label="GIF URL"
                     variant="standard"
                     autoComplete="off"
-                    sx={style.inputField}>
-                </TextField>
+                    sx={style.inputField}
+                ></TextField>
                 <SubmitButton />
-                <Button onClick={handleClose} sx={style.buttons}>Cancel</Button>
+                <Button onClick={handleClose} sx={style.buttons}>
+                    Cancel
+                </Button>
             </Box>
         </Modal>
-    )
-})
+    );
+});
 
 export default AddGifNotePopup;

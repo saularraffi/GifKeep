@@ -1,49 +1,59 @@
-import { React, useState } from 'react'
-import { Container, Typography, Paper, IconButton, Box, Grid } from '@mui/material'
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import { deleteGifNote } from '../../services/gifyuApi';
+import { React, useState } from "react";
+import { Container, Typography, Paper, IconButton, Box } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { deleteGifNote } from "../../services/gifyuApi";
 
 const styles = {
     root: {
         backgroundColor: "white",
-        border: "1px solid rgba(0, 0, 0, 0.12)"
+        border: "1px solid rgba(0, 0, 0, 0.12)",
     },
     typography: {
         fontSize: "20px",
         paddingTop: "5px",
-        paddingBottom: "10px"
-    }
-}
+        paddingBottom: "10px",
+    },
+};
 
-const GifNoteTile = ({id, note, category, gifUrl, setSharedPopupState, openPopup}) => {
+const GifNoteTile = ({
+    id,
+    note,
+    category,
+    gifUrl,
+    setSharedPopupState,
+    openPopup,
+}) => {
     const [anchorEl, setAnchorEl] = useState(null);
+    const [videoIsPlaying, setVideoIsPlaying] = useState(false);
     const open = Boolean(anchorEl);
-    
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
-    
+
     const handleClose = () => {
         setAnchorEl(null);
     };
 
     const handleDelete = () => {
-        deleteGifNote(id).then(res => {
-            setSharedPopupState({
-                id: res,
-                action: "DELETE",
-                status: "SUCCESS"
+        deleteGifNote(id)
+            .then((res) => {
+                setSharedPopupState({
+                    id: res,
+                    action: "DELETE",
+                    status: "SUCCESS",
+                });
+            })
+            .catch((err) => {
+                setSharedPopupState({
+                    error: err,
+                    action: "DELETE",
+                    status: "FAILED",
+                });
+                console.log(err);
             });
-        }).catch(err => {
-            setSharedPopupState({
-                error: err,
-                action: "DELETE",
-                status: "FAILED"
-            });
-            console.log(err)
-        });
         handleClose();
     };
 
@@ -55,13 +65,19 @@ const GifNoteTile = ({id, note, category, gifUrl, setSharedPopupState, openPopup
         return (
             <>
                 <MenuItem onClick={handleEdit}>
-                    <Typography sx={{ fontFamily: "Kanit", color: "blue" }}>EDIT</Typography>
-                </MenuItem>  
+                    <Typography sx={{ fontFamily: "Kanit" }}>EDIT</Typography>
+                </MenuItem>
                 <MenuItem onClick={handleDelete}>
-                    <Typography sx={{ fontFamily: "Kanit", color: "red" }}>DELETE</Typography>
+                    <Typography sx={{ fontFamily: "Kanit", color: "red" }}>
+                        DELETE
+                    </Typography>
                 </MenuItem>
             </>
-        )
+        );
+    };
+
+    const playVideo = () => {
+        setVideoIsPlaying(true);
     };
 
     return (
@@ -76,18 +92,38 @@ const GifNoteTile = ({id, note, category, gifUrl, setSharedPopupState, openPopup
                     open={open}
                     onClose={handleClose}
                     MenuListProps={{
-                        'aria-labelledby': 'basic-button',
+                        "aria-labelledby": "basic-button",
                     }}
                 >
                     <MenuOptions />
                 </Menu>
             </Box>
-            <img src={gifUrl} alt="" style={{ width: "100%" }}/>
+
+            <Box>
+                {videoIsPlaying ? (
+                    <video
+                        controls
+                        style={{ width: "100%", height: "100%" }}
+                        src="http://localhost:8080/api/videos/stream_test"
+                        autoPlay
+                    ></video>
+                ) : (
+                    <img
+                        style={{ width: "100%", height: "100%" }}
+                        src="http://localhost:8080/api/videos/thumbnail/placeholder"
+                        alt="placeholder"
+                        onClick={playVideo}
+                    />
+                )}
+            </Box>
+
             <Container>
-                <Typography style={styles.typography}>{note}</Typography>
+                <Typography style={note ? styles.typography : {}}>
+                    {note}
+                </Typography>
             </Container>
         </Paper>
-    )
-}
+    );
+};
 
 export default GifNoteTile;

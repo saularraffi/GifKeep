@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from "axios";
 
-const baseUrl = "http://localhost:8080/api/gifnotes"
+const baseUrl = "http://localhost:8080/api/gifnotes";
 
 export function getGifNotes() {
     try {
@@ -25,17 +25,17 @@ export function postGifNote(description, category, gifUrl) {
         const response = axios.post(baseUrl, {
             note: description,
             category: category,
-            gifUrl: gifUrl
+            gifUrl: gifUrl,
         });
         return response;
     } catch (error) {
-        return error; 
+        return error;
     }
 }
 
 export function deleteGifNote(id) {
     try {
-        const response = axios.delete(`${baseUrl}?id=${id}`)
+        const response = axios.delete(`${baseUrl}?id=${id}`);
         return response;
     } catch (error) {
         return error;
@@ -48,10 +48,10 @@ export function putGifNote(id, description, category, gifUrl) {
             id: id,
             note: description,
             category: category,
-            gifUrl: gifUrl
+            gifUrl: gifUrl,
         });
         return response;
     } catch (error) {
-        return error; 
+        return error;
     }
 }
