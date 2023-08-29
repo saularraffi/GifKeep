@@ -10,8 +10,7 @@ import {
     MenuItem,
     InputLabel,
 } from "@mui/material";
-import { postGifNote } from "../../services/gifyuApi";
-import { putGifNote } from "../../services/gifyuApi";
+import { postDanceNote, putDanceNote } from "../../services/danceNotesApi";
 
 const style = {
     root: {
@@ -38,27 +37,27 @@ const style = {
     },
 };
 
-const AddGifNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
+const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     const [id, setId] = useState("");
-    const [description, setDescription] = useState("");
+    const [noteText, setNoteText] = useState("");
     const [category, setCategory] = useState("");
-    const [gifUrl, setGifUrl] = useState("");
+    const [videoUrl, setvideoUrl] = useState("");
     const [open, setOpen] = useState(false);
 
     const categories = localStorage.getItem("categories").split(",");
 
-    const handleOpen = (id, description, category, gifUrl) => {
+    const handleOpen = (id, noteText, category, videoUrl) => {
         setId(id);
-        setDescription(description);
+        setNoteText(noteText);
         setCategory(category);
-        setGifUrl(gifUrl);
+        setvideoUrl(videoUrl);
         setOpen(true);
     };
 
     const handleClose = () => {
-        setDescription("");
+        setNoteText("");
         setCategory("");
-        setGifUrl("");
+        setvideoUrl("");
         setOpen(false);
     };
 
@@ -70,8 +69,8 @@ const AddGifNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
         handleOpen,
     }));
 
-    const addGifNote = () => {
-        postGifNote(description, category.trim(), gifUrl)
+    const addDanceNote = () => {
+        postDanceNote(noteText, category.trim(), videoUrl)
             .then((res) => {
                 setSharedPopupState({
                     id: res.data._id,
@@ -90,8 +89,8 @@ const AddGifNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
         handleClose();
     };
 
-    const updateGifNote = (e) => {
-        putGifNote(id, description, category.trim(), gifUrl)
+    const updateDanceNote = (e) => {
+        putDanceNote(id, noteText, category.trim(), videoUrl)
             .then((res) => {
                 setSharedPopupState({
                     id: res.data._id,
@@ -114,7 +113,7 @@ const AddGifNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
         if (mode === "UPDATE") {
             return (
                 <Button
-                    onClick={updateGifNote}
+                    onClick={updateDanceNote}
                     variant="contained"
                     sx={style.buttons}
                 >
@@ -124,7 +123,7 @@ const AddGifNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
         } else {
             return (
                 <Button
-                    onClick={addGifNote}
+                    onClick={addDanceNote}
                     variant="contained"
                     sx={style.buttons}
                 >
@@ -139,17 +138,17 @@ const AddGifNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
             open={open}
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
+            aria-describedby="modal-modal-noteText"
         >
             <Box sx={style.root}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                    Add GIF Note
+                    Add Dance Note
                 </Typography>
                 <TextField
-                    defaultValue={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    value={description}
-                    label="Description"
+                    defaultValue={noteText}
+                    onChange={(e) => setNoteText(e.target.value)}
+                    value={noteText}
+                    label="Note Text"
                     variant="standard"
                     autoComplete="off"
                     sx={style.inputField}
@@ -178,10 +177,10 @@ const AddGifNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
                     </Select>
                 </FormControl>
                 <TextField
-                    defaultValue={gifUrl}
-                    onChange={(e) => setGifUrl(e.target.value)}
-                    value={gifUrl}
-                    label="GIF URL"
+                    defaultValue={videoUrl}
+                    onChange={(e) => setvideoUrl(e.target.value)}
+                    value={videoUrl}
+                    label="Video URL"
                     variant="standard"
                     autoComplete="off"
                     sx={style.inputField}
@@ -195,4 +194,4 @@ const AddGifNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     );
 });
 
-export default AddGifNotePopup;
+export default AddDanceNotePopup;

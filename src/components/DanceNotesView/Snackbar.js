@@ -9,15 +9,15 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 const message = {
     success: {
-        add: "Successfully added GIF Note",
-        delete: "Successfully deleted GIF Note",
-        edit: "Successfully edited GIF Note",
+        add: "Successfully added Dance Note",
+        delete: "Successfully deleted Dance Note",
+        edit: "Successfully edited Dance Note",
     },
     error: {
-        get: "Failed to get GIF Notes!",
-        add: "Failed to add GIF Note!",
-        delete: "Failed to delete GIF Note!",
-        edit: "Failed to edit GIF Note!",
+        get: "Failed to get Dance Notes!",
+        add: "Failed to add Dance Note!",
+        delete: "Failed to delete Dance Note!",
+        edit: "Failed to edit Dance Note!",
     },
 };
 

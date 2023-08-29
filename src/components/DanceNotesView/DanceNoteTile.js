@@ -3,7 +3,7 @@ import { Container, Typography, Paper, IconButton, Box } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { deleteGifNote } from "../../services/gifyuApi";
+import { deleteDanceNote } from "../../services/danceNotesApi";
 
 const styles = {
     root: {
@@ -17,11 +17,11 @@ const styles = {
     },
 };
 
-const GifNoteTile = ({
+const DanceNoteTile = ({
     id,
     note,
     category,
-    gifUrl,
+    videoUrl,
     setSharedPopupState,
     openPopup,
 }) => {
@@ -38,7 +38,7 @@ const GifNoteTile = ({
     };
 
     const handleDelete = () => {
-        deleteGifNote(id)
+        deleteDanceNote(id)
             .then((res) => {
                 setSharedPopupState({
                     id: res,
@@ -58,7 +58,7 @@ const GifNoteTile = ({
     };
 
     const handleEdit = () => {
-        openPopup(id, note, category, gifUrl);
+        openPopup(id, note, category, videoUrl);
     };
 
     const MenuOptions = () => {
@@ -126,4 +126,4 @@ const GifNoteTile = ({
     );
 };
 
-export default GifNoteTile;
+export default DanceNoteTile;
