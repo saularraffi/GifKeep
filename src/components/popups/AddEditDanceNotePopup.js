@@ -39,23 +39,23 @@ const style = {
 
 const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     const [id, setId] = useState("");
-    const [description, setDescription] = useState("");
+    const [noteText, setNoteText] = useState("");
     const [category, setCategory] = useState("");
     const [videoUrl, setvideoUrl] = useState("");
     const [open, setOpen] = useState(false);
 
     const categories = localStorage.getItem("categories").split(",");
 
-    const handleOpen = (id, description, category, videoUrl) => {
+    const handleOpen = (id, noteText, category, videoUrl) => {
         setId(id);
-        setDescription(description);
+        setNoteText(noteText);
         setCategory(category);
         setvideoUrl(videoUrl);
         setOpen(true);
     };
 
     const handleClose = () => {
-        setDescription("");
+        setNoteText("");
         setCategory("");
         setvideoUrl("");
         setOpen(false);
@@ -70,7 +70,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     }));
 
     const addDanceNote = () => {
-        postDanceNote(description, category.trim(), videoUrl)
+        postDanceNote(noteText, category.trim(), videoUrl)
             .then((res) => {
                 setSharedPopupState({
                     id: res.data._id,
@@ -90,7 +90,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     };
 
     const updateDanceNote = (e) => {
-        putDanceNote(id, description, category.trim(), videoUrl)
+        putDanceNote(id, noteText, category.trim(), videoUrl)
             .then((res) => {
                 setSharedPopupState({
                     id: res.data._id,
@@ -138,17 +138,17 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
             open={open}
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
+            aria-describedby="modal-modal-noteText"
         >
             <Box sx={style.root}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                     Add Dance Note
                 </Typography>
                 <TextField
-                    defaultValue={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    value={description}
-                    label="Description"
+                    defaultValue={noteText}
+                    onChange={(e) => setNoteText(e.target.value)}
+                    value={noteText}
+                    label="NoteText"
                     variant="standard"
                     autoComplete="off"
                     sx={style.inputField}

@@ -24,9 +24,9 @@ const DanceNoteView = ({
     const [danceNotes, setDanceNotes] = useState([]);
     const popupRef = useRef();
 
-    const openPopup = (id, description, category, videoUrl) => {
+    const openPopup = (id, noteText, category, videoUrl) => {
         if (popupRef.current) {
-            popupRef.current.handleOpen(id, description, category, videoUrl);
+            popupRef.current.handleOpen(id, noteText, category, videoUrl);
         }
     };
 
