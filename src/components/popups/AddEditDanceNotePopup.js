@@ -148,7 +148,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
                     defaultValue={noteText}
                     onChange={(e) => setNoteText(e.target.value)}
                     value={noteText}
-                    label="NoteText"
+                    label="Note Text"
                     variant="standard"
                     autoComplete="off"
                     sx={style.inputField}
@@ -180,7 +180,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
                     defaultValue={videoUrl}
                     onChange={(e) => setvideoUrl(e.target.value)}
                     value={videoUrl}
-                    label="Dance URL"
+                    label="Video URL"
                     variant="standard"
                     autoComplete="off"
                     sx={style.inputField}
