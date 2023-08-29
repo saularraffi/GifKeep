@@ -7,7 +7,7 @@ const dev = {
         host: "0.0.0.0",
     },
     db: {
-        connectionString: "mongodb://0.0.0.0:27017/gifkeep",
+        connectionString: "mongodb://0.0.0.0:27017/mybaile",
         options: {
             useNewUrlParser: true,
             useUnifiedTopology: true,

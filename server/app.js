@@ -6,7 +6,7 @@ const cors = require("cors");
 const config = require("./config");
 
 // requiring routes
-const gifNotesController = require("./api/controllers/gifNotesController");
+const danceNoteController = require("./api/controllers/danceNoteController");
 const usersController = require("./api/controllers/userController");
 const videoController = require("./api/controllers/videoController");
 
@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // using routes in app
-app.use(gifNotesController);
+app.use(danceNoteController);
 app.use(usersController);
 app.use(videoController);
 

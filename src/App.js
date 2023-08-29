@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import GifNotesView from "./components/GifNotesView";
+import DanceNotesView from "./components/DanceNotesView";
 import TopAppBar from "./components/TopAppBar";
 import SideDrawer from "./components/SideDrawer";
 import { ThemeProvider } from "@emotion/react";
@@ -40,7 +40,7 @@ function App() {
                     setOpen={setSharedDrawerState}
                     setSharedCategoryState={setSharedCategoryState}
                 />
-                <GifNotesView
+                <DanceNotesView
                     sharedPopupState={sharedPopupState}
                     setSharedPopupState={setSharedPopupState}
                     sharedCategoryState={sharedCategoryState}

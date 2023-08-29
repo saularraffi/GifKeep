@@ -5,7 +5,7 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { Typography } from "@mui/material";
-import AddEditGifNotePopup from "../popups/AddEditGifNotePopup";
+import AddEditDanceNotePopup from "../popups/AddEditDanceNotePopup";
 import MenuIcon from "@mui/icons-material/Menu";
 
 const TopAppBar = ({ setSharedPopupState, openDrawer }) => {
@@ -28,7 +28,7 @@ const TopAppBar = ({ setSharedPopupState, openDrawer }) => {
                     <MenuIcon sx={{ fontSize: "2.5rem", color: "white" }} />
                 </IconButton>
                 <Typography sx={{ marginLeft: "15px", fontSize: "2rem" }}>
-                    GifKeep
+                    MyBaile
                 </Typography>
                 <IconButton
                     size="large"
@@ -45,7 +45,7 @@ const TopAppBar = ({ setSharedPopupState, openDrawer }) => {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AddEditGifNotePopup
+            <AddEditDanceNotePopup
                 ref={popupRef}
                 setSharedPopupState={setSharedPopupState}
                 mode={"ADD"}
