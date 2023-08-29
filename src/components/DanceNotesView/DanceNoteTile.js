@@ -3,7 +3,7 @@ import { Container, Typography, Paper, IconButton, Box } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { deleteDanceNote } from "../../services/gifyuApi";
+import { deleteDanceNote } from "../../services/danceNotesApi";
 
 const styles = {
     root: {

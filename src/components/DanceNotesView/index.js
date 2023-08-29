@@ -2,7 +2,7 @@ import { React, useEffect, useState, useRef } from "react";
 import {
     getDanceNotes,
     getDanceNotesByCategory,
-} from "../../services/gifyuApi";
+} from "../../services/danceNotesApi";
 import DanceNoteTile from "./DanceNoteTile";
 import { Container, Grid, Typography, Box } from "@mui/material";
 import AddEditDanceNotePopup from "../popups/AddEditDanceNotePopup";

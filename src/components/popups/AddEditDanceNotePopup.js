@@ -10,8 +10,7 @@ import {
     MenuItem,
     InputLabel,
 } from "@mui/material";
-import { postDanceNote } from "../../services/gifyuApi";
-import { putDanceNote } from "../../services/gifyuApi";
+import { postDanceNote, putDanceNote } from "../../services/danceNotesApi";
 
 const style = {
     root: {
