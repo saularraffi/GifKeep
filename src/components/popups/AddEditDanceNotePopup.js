@@ -9,6 +9,7 @@ import {
     Select,
     MenuItem,
     InputLabel,
+    Input,
 } from "@mui/material";
 import { postDanceNote, putDanceNote } from "../../services/danceNotesApi";
 
@@ -44,7 +45,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     const [noteText, setNoteText] = useState("");
     const [category, setCategory] = useState("");
     const [videoUrl, setvideoUrl] = useState("");
-    const [selectedVideoFile, setSeclectedVideoFile] = useState(null);
+    const [selectedVideoFile, setSelectedVideoFile] = useState(null);
     const [open, setOpen] = useState(false);
 
     const categories = localStorage.getItem("categories").split(",");
@@ -61,7 +62,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
         setNoteText("");
         setCategory("");
         setvideoUrl("");
-        setSeclectedVideoFile(null);
+        setSelectedVideoFile(null);
         setOpen(false);
     };
 
@@ -141,7 +142,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     };
 
     const handleFileChange = (event) => {
-        setSeclectedVideoFile(event.target.files[0]);
+        setSelectedVideoFile(event.target.files[0]);
     };
 
     const handleFileUpload = () => {
@@ -169,6 +170,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                     Add Dance Note
                 </Typography>
+
                 <TextField
                     defaultValue={noteText}
                     onChange={(e) => setNoteText(e.target.value)}
@@ -178,6 +180,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
                     autoComplete="off"
                     sx={style.inputField}
                 ></TextField>
+
                 <FormControl variant="standard" sx={{ width: "50%" }}>
                     <InputLabel id="demo-simple-select-label">
                         Category
@@ -201,27 +204,19 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
                         })}
                     </Select>
                 </FormControl>
-                {/* <TextField
-                    defaultValue={videoUrl}
-                    onChange={(e) => setvideoUrl(e.target.value)}
-                    value={videoUrl}
-                    label="Video URL"
-                    variant="standard"
-                    autoComplete="off"
-                    sx={style.inputField}
-                ></TextField> */}
 
-                <Box sx={{ marginTop: "30px" }}>
-                    <form enctype="multipart/form-data">
-                        <input
-                            onChange={handleFileChange}
-                            type="file"
-                            accept="video/mp4"
-                        ></input>
-                    </form>
+                <Box sx={{ marginTop: "30px", display: "flex" }}>
+                    <Button variant="contained" component="label">
+                        Upload File
+                        <input type="file" onChange={handleFileChange} hidden />
+                    </Button>
+                    <Typography sx={{ marginLeft: "15px" }}>
+                        {selectedVideoFile?.name}
+                    </Typography>
                 </Box>
 
                 <SubmitButton />
+
                 <Button onClick={handleClose} sx={style.buttons}>
                     Cancel
                 </Button>
