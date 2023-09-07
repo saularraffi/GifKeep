@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 import { postDanceNote, putDanceNote } from "../../services/danceNotesApi";
 
+import axios from "axios";
+
 const style = {
     root: {
         position: "absolute",
@@ -42,6 +44,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     const [noteText, setNoteText] = useState("");
     const [category, setCategory] = useState("");
     const [videoUrl, setvideoUrl] = useState("");
+    const [selectedVideoFile, setSeclectedVideoFile] = useState(null);
     const [open, setOpen] = useState(false);
 
     const categories = localStorage.getItem("categories").split(",");
@@ -58,6 +61,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
         setNoteText("");
         setCategory("");
         setvideoUrl("");
+        setSeclectedVideoFile(null);
         setOpen(false);
     };
 
@@ -70,6 +74,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     }));
 
     const addDanceNote = () => {
+        handleFileUpload();
         postDanceNote(noteText, category.trim(), videoUrl)
             .then((res) => {
                 setSharedPopupState({
@@ -116,6 +121,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
                     onClick={updateDanceNote}
                     variant="contained"
                     sx={style.buttons}
+                    disabled={!selectedVideoFile || !category}
                 >
                     Update
                 </Button>
@@ -126,11 +132,30 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
                     onClick={addDanceNote}
                     variant="contained"
                     sx={style.buttons}
+                    disabled={!selectedVideoFile || !category}
                 >
                     Add
                 </Button>
             );
         }
+    };
+
+    const handleFileChange = (event) => {
+        setSeclectedVideoFile(event.target.files[0]);
+    };
+
+    const handleFileUpload = () => {
+        const formData = new FormData();
+
+        formData.append(
+            "danceNoteVideo",
+            selectedVideoFile,
+            selectedVideoFile.name
+        );
+
+        axios
+            .post("http://localhost:8080/api/videos/upload", formData)
+            .then((data) => console.log(data));
     };
 
     return (
@@ -176,7 +201,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
                         })}
                     </Select>
                 </FormControl>
-                <TextField
+                {/* <TextField
                     defaultValue={videoUrl}
                     onChange={(e) => setvideoUrl(e.target.value)}
                     value={videoUrl}
@@ -184,7 +209,18 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
                     variant="standard"
                     autoComplete="off"
                     sx={style.inputField}
-                ></TextField>
+                ></TextField> */}
+
+                <Box sx={{ marginTop: "30px" }}>
+                    <form enctype="multipart/form-data">
+                        <input
+                            onChange={handleFileChange}
+                            type="file"
+                            accept="video/mp4"
+                        ></input>
+                    </form>
+                </Box>
+
                 <SubmitButton />
                 <Button onClick={handleClose} sx={style.buttons}>
                     Cancel
