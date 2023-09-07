@@ -109,7 +109,7 @@ router.get(`${endpoint}/thumbnail/:key`, (req, res) => {
 });
 
 router.post(
-    `${endpoint}/upload`,
+    endpoint,
     fileUpload({ createParentPath: true }),
     filesPayloadExists,
     fileSizeLimiter,

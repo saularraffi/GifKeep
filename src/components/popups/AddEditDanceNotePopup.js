@@ -12,6 +12,7 @@ import {
     Input,
 } from "@mui/material";
 import { postDanceNote, putDanceNote } from "../../services/danceNotesApi";
+import { postVideo } from "../../services/videoApi";
 import axios from "axios";
 
 const style = {
@@ -74,7 +75,10 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     }));
 
     const addDanceNote = () => {
-        handleFileUpload();
+        postVideo(selectedVideoFile)
+            .then((res) => console.log(res))
+            .catch((err) => console.log(err));
+
         postDanceNote(noteText, category.trim(), videoUrl)
             .then((res) => {
                 setSharedPopupState({
@@ -143,20 +147,6 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
         setSelectedVideoFile(event.target.files[0]);
     };
 
-    const handleFileUpload = () => {
-        const formData = new FormData();
-
-        formData.append(
-            "danceNoteVideo",
-            selectedVideoFile,
-            selectedVideoFile.name
-        );
-
-        axios
-            .post("http://localhost:8080/api/videos/upload", formData)
-            .then((data) => console.log(data));
-    };
-
     return (
         <Modal
             open={open}
@@ -208,8 +198,9 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
                         variant="contained"
                         component="label"
                         disabled={mode === "UPDATE"}
+                        sx={{ textTransform: "unset" }}
                     >
-                        Upload File
+                        Upload Video
                         <input type="file" onChange={handleFileChange} hidden />
                     </Button>
                     <Typography sx={{ marginLeft: "15px" }}>
