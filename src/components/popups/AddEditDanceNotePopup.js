@@ -12,7 +12,6 @@ import {
     Input,
 } from "@mui/material";
 import { postDanceNote, putDanceNote } from "../../services/danceNotesApi";
-
 import axios from "axios";
 
 const style = {
@@ -122,7 +121,6 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
                     onClick={updateDanceNote}
                     variant="contained"
                     sx={style.buttons}
-                    disabled={!selectedVideoFile || !category}
                 >
                     Update
                 </Button>
@@ -206,7 +204,11 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
                 </FormControl>
 
                 <Box sx={{ marginTop: "30px", display: "flex" }}>
-                    <Button variant="contained" component="label">
+                    <Button
+                        variant="contained"
+                        component="label"
+                        disabled={mode === "UPDATE"}
+                    >
                         Upload File
                         <input type="file" onChange={handleFileChange} hidden />
                     </Button>
