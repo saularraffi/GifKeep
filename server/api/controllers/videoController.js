@@ -1,6 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const AWS = require("aws-sdk");
+const path = require("path");
+const fs = require("fs");
+const fileUpload = require("express-fileupload");
+const filesPayloadExists = require("../../middleaware/filesPayloadExists");
+const fileSizeLimiter = require("../../middleaware/fileSizeLimiter");
+const fileExtLimiter = require("../../middleaware/fileExtLimiter");
 
 const endpoint = "/api/videos";
 
@@ -102,5 +108,64 @@ router.get(`${endpoint}/thumbnail/:key`, (req, res) => {
         }
     });
 });
+
+const uploadVideoToS3 = (fileKey, filePath) => {
+    const bucketName = "dance-keep-videos";
+    const fileData = fs.readFileSync(filePath);
+
+    s3.upload(
+        {
+            Bucket: bucketName,
+            Key: fileKey,
+            Body: fileData,
+        },
+        (err, data) => {
+            if (err) {
+                console.error(err);
+            } else {
+                console.log(`File uploaded successfully. ${data.Location}`);
+            }
+
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    console.log(`Failed to delete video file ${filePath}`);
+                } else {
+                    console.log(`Successfully deleted video file ${filePath}`);
+                }
+            });
+        }
+    );
+};
+
+router.post(
+    endpoint,
+    fileUpload({ createParentPath: true }),
+    filesPayloadExists,
+    fileSizeLimiter,
+    fileExtLimiter([".mp4"]),
+    (req, res) => {
+        const files = req.files;
+        const fileKey = Object.keys(files)[0];
+        const fileObj = files[fileKey];
+        const fileKeyS3 = req.body.fileKey;
+
+        const filePath = path.join(__dirname, "../..", "videos", fileObj.name);
+
+        fileObj.mv(filePath, (err) => {
+            if (err)
+                return res.status(500).json({ status: "error", message: err });
+
+            uploadVideoToS3(
+                `${fileKeyS3}${path.extname(fileObj.name)}`,
+                filePath
+            );
+        });
+
+        return res.json({
+            status: "success",
+            message: `Successfully uploaded file '${fileObj.name}'`,
+        });
+    }
+);
 
 module.exports = router;
