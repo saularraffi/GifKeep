@@ -104,7 +104,7 @@ const DanceNoteTile = ({
                     <video
                         controls
                         style={{ width: "100%", height: "100%" }}
-                        src="http://localhost:8080/api/videos/stream_test"
+                        src={`http://localhost:8080/api/videos/${id}`}
                         autoPlay
                     ></video>
                 ) : (
