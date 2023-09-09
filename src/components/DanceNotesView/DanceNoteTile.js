@@ -110,7 +110,7 @@ const DanceNoteTile = ({
                 ) : (
                     <img
                         style={{ width: "100%", height: "100%" }}
-                        src="http://localhost:8080/api/videos/thumbnail/placeholder"
+                        src="http://localhost:8080/api/videos/thumbnail/video-play-icon"
                         alt="placeholder"
                         onClick={playVideo}
                     />
