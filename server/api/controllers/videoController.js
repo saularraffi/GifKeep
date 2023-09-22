@@ -7,8 +7,16 @@ const fileUpload = require("express-fileupload");
 const filesPayloadExists = require("../../middleaware/filesPayloadExists");
 const fileSizeLimiter = require("../../middleaware/fileSizeLimiter");
 const fileExtLimiter = require("../../middleaware/fileExtLimiter");
+const ffmpeg = require("fluent-ffmpeg");
+const { CompareSharp } = require("@mui/icons-material");
 
 const endpoint = "/api/videos";
+
+const videoOutputDir = path.join(__dirname, "../..", "videos");
+const thumbnailOutputDir = path.join(__dirname, "../..", "thumbnails");
+
+const videoBucketName = "dance-keep-videos";
+const thumbnailBucketName = "dance-keep-thumbnails";
 
 const accessKeyId = "4A06I973DO6OA4EDM5M0";
 const secretAccessKey = "TBaCrRX6Asi62p3ffIC6ozSFdqanJ7ylrHKFKztv";
@@ -22,23 +30,6 @@ const s3 = new AWS.S3({
         timeout: 60_000,
     },
 });
-
-function getVideoStream(params, range) {
-    const videoObjectParams = range ? { ...params, Range: range } : params;
-
-    const videoObject = s3.getObject(videoObjectParams);
-    const videoStream = videoObject.createReadStream();
-
-    videoStream.on("end", () => {
-        console.log("[+] Stream finished");
-    });
-
-    videoStream.on("error", () => {
-        console.log("[-] Stream error");
-    });
-
-    return videoStream;
-}
 
 router.get(`${endpoint}/:key`, (req, res) => {
     const { range } = req.headers;
@@ -90,7 +81,7 @@ router.get(`${endpoint}/thumbnail/:key`, (req, res) => {
 
     const params = {
         Bucket: "dance-keep-thumbnails",
-        Key: `${key}.png`,
+        Key: `${key}.jpg`,
     };
 
     s3.getObject(params, (err, data) => {
@@ -98,7 +89,7 @@ router.get(`${endpoint}/thumbnail/:key`, (req, res) => {
             console.log(err);
             if (err.code === "NoSuchKey") {
                 res.status(404).send(
-                    `Could not find resource with key ${params.Key}`
+                    `[-] Could not find resource with key ${params.Key}`
                 );
             } else {
                 res.status(500).send("Unknown error");
@@ -109,8 +100,92 @@ router.get(`${endpoint}/thumbnail/:key`, (req, res) => {
     });
 });
 
-const uploadVideoToS3 = (fileKey, filePath) => {
-    const bucketName = "dance-keep-videos";
+router.post(
+    endpoint,
+    fileUpload({ createParentPath: true }),
+    filesPayloadExists,
+    fileSizeLimiter,
+    fileExtLimiter([".mp4"]),
+    (req, res) => {
+        const id = req.body.noteId;
+        const files = req.files;
+        const fileKey = Object.keys(files)[0];
+        const fileObj = files[fileKey];
+
+        const videoKey = `${id}${path.extname(fileObj.name)}`;
+        const thumbnailKey = `${id}.jpg`;
+        const videoFilePath = path.join(videoOutputDir, videoKey);
+        const thumbnailFilePath = path.join(thumbnailOutputDir, thumbnailKey);
+
+        fileObj.mv(videoFilePath, async (err) => {
+            if (err)
+                return res.status(500).json({ status: "error", message: err });
+
+            await uploadFiles(
+                thumbnailKey,
+                videoKey,
+                thumbnailFilePath,
+                videoFilePath
+            );
+
+            deleteFile(thumbnailFilePath);
+            deleteFile(videoFilePath);
+        });
+
+        return res.json({
+            status: "success",
+            message: `Successfully uploaded file '${fileObj.name}'`,
+        });
+    }
+);
+
+function getVideoStream(params, range) {
+    const videoObjectParams = range ? { ...params, Range: range } : params;
+
+    const videoObject = s3.getObject(videoObjectParams);
+    const videoStream = videoObject.createReadStream();
+
+    videoStream.on("end", () => {
+        console.log("[+] Stream finished");
+    });
+
+    videoStream.on("error", () => {
+        console.log("[-] Stream error");
+    });
+
+    return videoStream;
+}
+
+function uploadFiles(thumbnailKey, videoKey, thumbnailFilePath, videoFilePath) {
+    const customPromise = new Promise(async (resolve, reject) => {
+        await extractFirstFrame(thumbnailKey, videoFilePath);
+        uploadFileToS3(thumbnailKey, thumbnailFilePath, thumbnailBucketName);
+        uploadFileToS3(videoKey, videoFilePath, videoBucketName);
+        resolve();
+    });
+
+    return customPromise;
+}
+
+function extractFirstFrame(imageKey, videoFilePath) {
+    const customPromise = new Promise((resolve, reject) => {
+        ffmpeg(videoFilePath)
+            .screenshots({
+                count: 1, // Number of screenshots to take (1 for the first frame)
+                folder: thumbnailOutputDir, // Folder to save the image
+                filename: imageKey, // Output image file name
+            })
+            .on("end", () => resolve())
+            .on("error", (err) => {
+                console.error("[-] Error extracting first frame:", err);
+                reject();
+            });
+    });
+
+    return customPromise;
+}
+
+function uploadFileToS3(fileKey, filePath, bucketName) {
     const fileData = fs.readFileSync(filePath);
 
     s3.upload(
@@ -123,49 +198,20 @@ const uploadVideoToS3 = (fileKey, filePath) => {
             if (err) {
                 console.error(err);
             } else {
-                console.log(`File uploaded successfully. ${data.Location}`);
+                console.log(`[+] File uploaded successfully. ${data.Location}`);
             }
-
-            fs.unlink(filePath, (err) => {
-                if (err) {
-                    console.log(`Failed to delete video file ${filePath}`);
-                } else {
-                    console.log(`Successfully deleted video file ${filePath}`);
-                }
-            });
         }
     );
-};
+}
 
-router.post(
-    endpoint,
-    fileUpload({ createParentPath: true }),
-    filesPayloadExists,
-    fileSizeLimiter,
-    fileExtLimiter([".mp4"]),
-    (req, res) => {
-        const files = req.files;
-        const fileKey = Object.keys(files)[0];
-        const fileObj = files[fileKey];
-        const fileKeyS3 = req.body.fileKey;
-
-        const filePath = path.join(__dirname, "../..", "videos", fileObj.name);
-
-        fileObj.mv(filePath, (err) => {
-            if (err)
-                return res.status(500).json({ status: "error", message: err });
-
-            uploadVideoToS3(
-                `${fileKeyS3}${path.extname(fileObj.name)}`,
-                filePath
-            );
-        });
-
-        return res.json({
-            status: "success",
-            message: `Successfully uploaded file '${fileObj.name}'`,
-        });
-    }
-);
+function deleteFile(filePath) {
+    fs.unlink(filePath, (err) => {
+        if (err) {
+            console.log(`[-] Failed to delete file ${filePath}`);
+        } else {
+            console.log(`[+] Successfully deleted file ${filePath}`);
+        }
+    });
+}
 
 module.exports = router;
