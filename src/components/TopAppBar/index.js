@@ -1,10 +1,13 @@
 import { React, useRef } from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import { Typography } from "@mui/material";
+import {
+    Typography,
+    Tooltip,
+    Box,
+    AppBar,
+    Toolbar,
+    IconButton,
+} from "@mui/material";
 import AddEditDanceNotePopup from "../popups/AddEditDanceNotePopup";
 import MenuIcon from "@mui/icons-material/Menu";
 
@@ -30,15 +33,17 @@ const TopAppBar = ({ setSharedPopupState, openDrawer }) => {
                 <Typography sx={{ marginLeft: "15px", fontSize: "2rem" }}>
                     MyBaile
                 </Typography>
-                <IconButton
-                    size="large"
-                    edge="start"
-                    color="inherit"
-                    onClick={openPopup}
-                    sx={{ mr: 2, marginLeft: "auto" }}
-                >
-                    <AddBoxIcon sx={{ fontSize: "2.5rem" }} />
-                </IconButton>
+                <Tooltip title="Add New Note">
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        onClick={openPopup}
+                        sx={{ mr: 2, marginLeft: "auto" }}
+                    >
+                        <AddBoxIcon sx={{ fontSize: "2.5rem" }} />
+                    </IconButton>
+                </Tooltip>
             </Toolbar>
         );
     };
