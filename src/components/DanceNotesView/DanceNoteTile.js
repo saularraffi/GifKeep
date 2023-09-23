@@ -17,6 +17,9 @@ const styles = {
     },
 };
 
+const loadingImg =
+    "https://media0.giphy.com/media/9dsa6FX5zpQO5lGEhx/giphy.gif?cid=ecf05e47zhp1iyssits4vs3mw3ze6k3crw260sud84zj1hub&ep=v1_gifs_search&rid=giphy.gif";
+
 const DanceNoteTile = ({
     id,
     note,
@@ -111,6 +114,10 @@ const DanceNoteTile = ({
                     <img
                         style={{ width: "100%", height: "215px" }}
                         src={`http://localhost:8080/api/videos/thumbnail/${id}`}
+                        onError={({ currentTarget }) => {
+                            currentTarget.onerror = null; // prevents looping
+                            currentTarget.src = loadingImg;
+                        }}
                         alt="placeholder"
                         onClick={playVideo}
                     />
