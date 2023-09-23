@@ -8,6 +8,7 @@ import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
 import theme from "../../theme";
 import { putUser } from "../../services/usersApi";
 import CategoryRow from "./CategoryRow";
@@ -150,17 +151,19 @@ export default function SideDrawer({ open, setOpen, setSharedCategoryState }) {
                             />
                         </Grid>
                         <Grid item sx={{ margin: 0, padding: 0 }}>
-                            <IconButton
-                                onClick={handleAddCategoryBtnClicked}
-                                sx={{ fontSize: "1rem", padding: 0 }}
-                            >
-                                <AddBoxIcon
-                                    sx={{
-                                        fontSize: "1.7em",
-                                        color: addCategoryButtonColor,
-                                    }}
-                                />
-                            </IconButton>
+                            <Tooltip title="Add Category">
+                                <IconButton
+                                    onClick={handleAddCategoryBtnClicked}
+                                    sx={{ fontSize: "1rem", padding: 0 }}
+                                >
+                                    <AddBoxIcon
+                                        sx={{
+                                            fontSize: "1.7em",
+                                            color: addCategoryButtonColor,
+                                        }}
+                                    />
+                                </IconButton>
+                            </Tooltip>
                         </Grid>
                         <Grid item sx={styles.dividerContainer}>
                             <Divider

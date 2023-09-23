@@ -1,6 +1,14 @@
-import { React, useState } from "react";
-import { Container, Typography, Paper, IconButton, Box } from "@mui/material";
+import { Fragment, React, useState } from "react";
+import {
+    Container,
+    Typography,
+    Paper,
+    IconButton,
+    Box,
+    Tooltip,
+} from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { deleteDanceNote } from "../../services/danceNotesApi";
@@ -30,13 +38,14 @@ const DanceNoteTile = ({
 }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [videoIsPlaying, setVideoIsPlaying] = useState(false);
-    const open = Boolean(anchorEl);
+    const [showNoteText, setShowNoteText] = useState(false);
+    const openOptions = Boolean(anchorEl);
 
-    const handleClick = (event) => {
+    const handleOptionsClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
 
-    const handleClose = () => {
+    const handleOptionsClose = () => {
         setAnchorEl(null);
     };
 
@@ -57,11 +66,19 @@ const DanceNoteTile = ({
                 });
                 console.log(err);
             });
-        handleClose();
+        handleOptionsClose();
     };
 
     const handleEdit = () => {
         openPopup(id, note, category, videoUrl);
+    };
+
+    const playVideo = () => {
+        setVideoIsPlaying(true);
+    };
+
+    const handleNoteTextVisibilityClick = () => {
+        setShowNoteText(!showNoteText);
     };
 
     const MenuOptions = () => {
@@ -79,21 +96,28 @@ const DanceNoteTile = ({
         );
     };
 
-    const playVideo = () => {
-        setVideoIsPlaying(true);
-    };
-
     return (
         <Paper style={styles.root} elevation={2}>
             <Box sx={{ float: "right" }}>
-                <IconButton onClick={handleClick}>
-                    <MoreVertIcon />
-                </IconButton>
+                <Tooltip title={showNoteText ? "Hide Note" : "Show Note"}>
+                    <IconButton
+                        disabled={!note}
+                        onClick={handleNoteTextVisibilityClick}
+                    >
+                        <VisibilityIcon />
+                    </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Options">
+                    <IconButton onClick={handleOptionsClick}>
+                        <MoreVertIcon />
+                    </IconButton>
+                </Tooltip>
                 <Menu
                     id="basic-menu"
                     anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
+                    open={openOptions}
+                    onClose={handleOptionsClose}
                     MenuListProps={{
                         "aria-labelledby": "basic-button",
                     }}
@@ -124,11 +148,15 @@ const DanceNoteTile = ({
                 )}
             </Box>
 
-            <Container>
-                <Typography style={note ? styles.typography : {}}>
-                    {note}
-                </Typography>
-            </Container>
+            {showNoteText ? (
+                <Container>
+                    <Typography style={note ? styles.typography : {}}>
+                        {note}
+                    </Typography>
+                </Container>
+            ) : (
+                <></>
+            )}
         </Paper>
     );
 };
