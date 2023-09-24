@@ -18,12 +18,11 @@ exports.getDanceNotesByCategory = async (category) => {
     }
 };
 
-exports.saveDanceNote = async (note, category, videoUrl) => {
+exports.saveDanceNote = async (note, category) => {
     try {
         const danceNote = new DanceNote({
             note: note,
             category: category,
-            videoUrl: videoUrl,
         });
         const savedDanceNote = await danceNote.save();
         return savedDanceNote;
@@ -41,7 +40,7 @@ exports.deleteDanceNote = async (id) => {
     }
 };
 
-exports.updateDanceNote = async (id, note, category, videoUrl) => {
+exports.updateDanceNote = async (id, note, category) => {
     try {
         let updatedFields = {};
 
@@ -50,9 +49,6 @@ exports.updateDanceNote = async (id, note, category, videoUrl) => {
         }
         if (category !== undefined) {
             updatedFields.category = category;
-        }
-        if (videoUrl !== undefined) {
-            updatedFields.videoUrl = videoUrl;
         }
 
         const updatedDanceNote = await DanceNote.findOneAndUpdate(

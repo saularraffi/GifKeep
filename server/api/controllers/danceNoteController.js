@@ -45,10 +45,9 @@ router.get(endpoint, async (req, res) => {
 router.post(endpoint, async (req, res) => {
     const { note } = req.body;
     const { category } = req.body;
-    const { videoUrl } = req.body;
 
     danceNoteService
-        .saveDanceNote(note, category, videoUrl)
+        .saveDanceNote(note, category)
         .then((danceNote) => {
             res.status(200);
             res.send(danceNote);
@@ -80,10 +79,9 @@ router.put(endpoint, async (req, res) => {
     const { id } = req.body;
     const { note } = req.body;
     const { category } = req.body;
-    const { videoUrl } = req.body;
 
     danceNoteService
-        .updateDanceNote(id, note, category, videoUrl)
+        .updateDanceNote(id, note, category)
         .then((danceNote) => {
             res.status(200);
             res.send(danceNote);
