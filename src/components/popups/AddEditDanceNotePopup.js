@@ -75,7 +75,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     }));
 
     const addDanceNote = () => {
-        postDanceNote(noteText, category.trim(), videoUrl)
+        postDanceNote(noteText.trim(), category.trim(), videoUrl)
             .then((res) => {
                 postVideo(res.data._id, selectedVideoFile)
                     .then((res) => console.log(res))
@@ -99,7 +99,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     };
 
     const updateDanceNote = (e) => {
-        putDanceNote(id, noteText, category.trim(), videoUrl)
+        putDanceNote(id, noteText.trim(), category.trim(), videoUrl)
             .then((res) => {
                 setSharedPopupState({
                     id: res.data._id,
