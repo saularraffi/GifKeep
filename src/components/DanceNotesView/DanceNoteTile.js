@@ -33,7 +33,6 @@ const DanceNoteTile = ({
     id,
     note,
     category,
-    videoUrl,
     setSharedPopupState,
     openPopup,
 }) => {
@@ -76,7 +75,7 @@ const DanceNoteTile = ({
     };
 
     const handleEdit = () => {
-        openPopup(id, note, category, videoUrl);
+        openPopup(id, note, category);
     };
 
     const playVideo = () => {

@@ -1,4 +1,10 @@
-import { React, useState, forwardRef, useImperativeHandle } from "react";
+import {
+    React,
+    useState,
+    forwardRef,
+    useImperativeHandle,
+    useEffect,
+} from "react";
 import {
     Box,
     Modal,
@@ -44,24 +50,21 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     const [id, setId] = useState("");
     const [noteText, setNoteText] = useState("");
     const [category, setCategory] = useState("");
-    const [videoUrl, setvideoUrl] = useState("");
     const [selectedVideoFile, setSelectedVideoFile] = useState(null);
     const [open, setOpen] = useState(false);
 
     const categories = localStorage.getItem("categories").split(",");
 
-    const handleOpen = (id, noteText, category, videoUrl) => {
+    const handleOpen = (id, noteText, category) => {
         setId(id);
         setNoteText(noteText);
         setCategory(category);
-        setvideoUrl(videoUrl);
         setOpen(true);
     };
 
     const handleClose = () => {
         setNoteText("");
         setCategory("");
-        setvideoUrl("");
         setSelectedVideoFile(null);
         setOpen(false);
     };
@@ -75,7 +78,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     }));
 
     const addDanceNote = () => {
-        postDanceNote(noteText.trim(), category.trim(), videoUrl)
+        postDanceNote(noteText.trim(), category.trim())
             .then((res) => {
                 postVideo(res.data._id, selectedVideoFile)
                     .then((res) => console.log(res))
@@ -99,7 +102,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
     };
 
     const updateDanceNote = (e) => {
-        putDanceNote(id, noteText.trim(), category.trim(), videoUrl)
+        putDanceNote(id, noteText.trim(), category.trim())
             .then((res) => {
                 setSharedPopupState({
                     id: res.data._id,

@@ -20,12 +20,11 @@ export function getDanceNotesByCategory(category) {
     }
 }
 
-export function postDanceNote(noteText, category, videoUrl) {
+export function postDanceNote(noteText, category) {
     try {
         const response = axios.post(baseUrl, {
             note: noteText,
             category: category,
-            videoUrl: videoUrl,
         });
         return response;
     } catch (error) {
@@ -42,13 +41,12 @@ export function deleteDanceNote(id) {
     }
 }
 
-export function putDanceNote(id, noteText, category, videoUrl) {
+export function putDanceNote(id, noteText, category) {
     try {
         const response = axios.put(baseUrl, {
             id: id,
             note: noteText,
             category: category,
-            videoUrl: videoUrl,
         });
         return response;
     } catch (error) {
