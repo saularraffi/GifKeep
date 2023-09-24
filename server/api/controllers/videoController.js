@@ -36,12 +36,13 @@ router.get(`${endpoint}/:key`, (req, res) => {
     const { key } = req.params;
 
     const params = {
-        Bucket: "dance-keep-videos",
+        Bucket: videoBucketName,
         Key: `${key}.mp4`,
     };
 
     s3.headObject(params, function (err, data) {
         if (err) {
+            console.log(`[-] Error getting file ${key}.mp4`);
             console.error(err);
         }
 
@@ -80,12 +81,13 @@ router.get(`${endpoint}/thumbnail/:key`, (req, res) => {
     const { key } = req.params;
 
     const params = {
-        Bucket: "dance-keep-thumbnails",
+        Bucket: thumbnailBucketName,
         Key: `${key}.jpg`,
     };
 
     s3.getObject(params, (err, data) => {
         if (err) {
+            console.log(`[-] Error getting file ${key}.jpg`);
             console.log(err);
             if (err.code === "NoSuchKey") {
                 res.status(404).send(
@@ -128,8 +130,8 @@ router.post(
                 videoFilePath
             );
 
-            deleteFile(thumbnailFilePath);
-            deleteFile(videoFilePath);
+            deleteLocalFile(thumbnailFilePath);
+            deleteLocalFile(videoFilePath);
         });
 
         return res.json({
@@ -138,6 +140,45 @@ router.post(
         });
     }
 );
+
+router.delete(endpoint, (req, res) => {
+    const { id } = req.query;
+
+    deleteFileFromS3(`${id}.mp4`, videoBucketName)
+        .then((data) => {
+            console.log(`[+] Successfully deleted file ${id}.mp4`);
+            res.status(500).send(`Successfully deleted file ${id}.mp4`);
+        })
+        .catch((err) => {
+            console.log(`[-] Error deleting file ${id}.mp4`);
+            console.log(err);
+            res.status(500).send("Error deleting file");
+        });
+
+    deleteFileFromS3(`${id}.jpg`, thumbnailBucketName).catch((err) => {
+        console.log(`[-] Error deleting file ${id}.jpg`);
+        console.log(err);
+    });
+});
+
+function deleteFileFromS3(key, bucket) {
+    var params = {
+        Bucket: bucket,
+        Key: key,
+    };
+
+    const customPromise = new Promise(async (resolve, reject) => {
+        s3.deleteObject(params, function (err, data) {
+            if (!err) {
+                resolve(data);
+            } else {
+                reject(err);
+            }
+        });
+    });
+
+    return customPromise;
+}
 
 function getVideoStream(params, range) {
     const videoObjectParams = range ? { ...params, Range: range } : params;
@@ -196,6 +237,7 @@ function uploadFileToS3(fileKey, filePath, bucketName) {
         },
         (err, data) => {
             if (err) {
+                console.log(`[-] Failed to upload file. ${data.Location}`);
                 console.error(err);
             } else {
                 console.log(`[+] File uploaded successfully. ${data.Location}`);
@@ -204,7 +246,7 @@ function uploadFileToS3(fileKey, filePath, bucketName) {
     );
 }
 
-function deleteFile(filePath) {
+function deleteLocalFile(filePath) {
     fs.unlink(filePath, (err) => {
         if (err) {
             console.log(`[-] Failed to delete file ${filePath}`);

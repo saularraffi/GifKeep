@@ -12,6 +12,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { deleteDanceNote } from "../../services/danceNotesApi";
+import { deleteVideo } from "../../services/videoApi";
 
 const styles = {
     root: {
@@ -52,6 +53,10 @@ const DanceNoteTile = ({
     const handleDelete = () => {
         deleteDanceNote(id)
             .then((res) => {
+                deleteVideo(id)
+                    .then((res) => console.log(res))
+                    .catch((err) => console.log(err));
+
                 setSharedPopupState({
                     id: res,
                     action: "DELETE",
