@@ -15,3 +15,12 @@ export function postVideo(noteId, videoFile) {
         return error;
     }
 }
+
+export function deleteVideo(id) {
+    try {
+        const response = axios.delete(`${baseUrl}?id=${id}`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
