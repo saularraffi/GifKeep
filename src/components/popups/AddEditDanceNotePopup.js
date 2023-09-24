@@ -57,7 +57,7 @@ const AddDanceNotePopup = forwardRef(({ setSharedPopupState, mode }, ref) => {
 
     const handleOpen = (id, noteText, category) => {
         setId(id);
-        setNoteText(noteText);
+        setNoteText(!noteText ? "" : noteText);
         setCategory(category);
         setOpen(true);
     };
