@@ -40,6 +40,7 @@ const DanceNoteTile = ({
     const [anchorEl, setAnchorEl] = useState(null);
     const [videoIsPlaying, setVideoIsPlaying] = useState(false);
     const [showNoteText, setShowNoteText] = useState(false);
+    const [videoIsAvailable, setVideoIsAvailable] = useState(true);
     const openOptions = Boolean(anchorEl);
 
     const handleOptionsClick = (event) => {
@@ -79,7 +80,7 @@ const DanceNoteTile = ({
     };
 
     const playVideo = () => {
-        setVideoIsPlaying(true);
+        if (videoIsAvailable) setVideoIsPlaying(true);
     };
 
     const handleNoteTextVisibilityClick = () => {
@@ -146,6 +147,7 @@ const DanceNoteTile = ({
                         onError={({ currentTarget }) => {
                             currentTarget.onerror = null; // prevents looping
                             currentTarget.src = loadingImg;
+                            setVideoIsAvailable(false);
                         }}
                         alt="placeholder"
                         onClick={playVideo}

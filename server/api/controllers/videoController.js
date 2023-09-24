@@ -200,8 +200,12 @@ function getVideoStream(params, range) {
 function uploadFiles(thumbnailKey, videoKey, thumbnailFilePath, videoFilePath) {
     const customPromise = new Promise(async (resolve, reject) => {
         await extractFirstFrame(thumbnailKey, videoFilePath);
-        uploadFileToS3(thumbnailKey, thumbnailFilePath, thumbnailBucketName);
-        uploadFileToS3(videoKey, videoFilePath, videoBucketName);
+        await uploadFileToS3(videoKey, videoFilePath, videoBucketName);
+        await uploadFileToS3(
+            thumbnailKey,
+            thumbnailFilePath,
+            thumbnailBucketName
+        );
         resolve();
     });
 
@@ -229,21 +233,29 @@ function extractFirstFrame(imageKey, videoFilePath) {
 function uploadFileToS3(fileKey, filePath, bucketName) {
     const fileData = fs.readFileSync(filePath);
 
-    s3.upload(
-        {
-            Bucket: bucketName,
-            Key: fileKey,
-            Body: fileData,
-        },
-        (err, data) => {
-            if (err) {
-                console.log(`[-] Failed to upload file. ${data.Location}`);
-                console.error(err);
-            } else {
-                console.log(`[+] File uploaded successfully. ${data.Location}`);
+    const customPromise = new Promise((resolve, reject) => {
+        s3.upload(
+            {
+                Bucket: bucketName,
+                Key: fileKey,
+                Body: fileData,
+            },
+            (err, data) => {
+                if (err) {
+                    console.log(`[-] Failed to upload file. ${data.Location}`);
+                    console.error(err);
+                    reject(err);
+                } else {
+                    console.log(
+                        `[+] File uploaded successfully. ${data.Location}`
+                    );
+                    resolve();
+                }
             }
-        }
-    );
+        );
+    });
+
+    return customPromise;
 }
 
 function deleteLocalFile(filePath) {
