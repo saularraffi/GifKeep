@@ -142,7 +142,11 @@ const DanceNoteTile = ({
                     ></video>
                 ) : (
                     <img
-                        style={{ width: "100%", height: "215px" }}
+                        style={{
+                            width: "100%",
+                            height: "215px",
+                            objectFit: "contain",
+                        }}
                         src={`http://localhost:8080/api/videos/thumbnail/${id}`}
                         onError={({ currentTarget }) => {
                             currentTarget.onerror = null; // prevents looping
