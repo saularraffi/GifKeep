@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios from "axios";
 
-const baseUrl = "http://localhost:8080/api/gifnotes"
+const baseUrl = "http://localhost:8080/api/danceNotes";
 
-export function getGifNotes() {
+export function getDanceNotes() {
     try {
         const response = axios.get(baseUrl);
         return response;
@@ -11,7 +11,7 @@ export function getGifNotes() {
     }
 }
 
-export function getGifNotesByCategory(category) {
+export function getDanceNotesByCategory(category) {
     try {
         const response = axios.get(`${baseUrl}?category=${category}`);
         return response;
@@ -20,38 +20,36 @@ export function getGifNotesByCategory(category) {
     }
 }
 
-export function postGifNote(description, category, gifUrl) {
+export function postDanceNote(noteText, category) {
     try {
         const response = axios.post(baseUrl, {
-            note: description,
+            note: noteText,
             category: category,
-            gifUrl: gifUrl
         });
-        return response;
-    } catch (error) {
-        return error; 
-    }
-}
-
-export function deleteGifNote(id) {
-    try {
-        const response = axios.delete(`${baseUrl}?id=${id}`)
         return response;
     } catch (error) {
         return error;
     }
 }
 
-export function putGifNote(id, description, category, gifUrl) {
+export function deleteDanceNote(id) {
+    try {
+        const response = axios.delete(`${baseUrl}?id=${id}`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export function putDanceNote(id, noteText, category) {
     try {
         const response = axios.put(baseUrl, {
             id: id,
-            note: description,
+            note: noteText,
             category: category,
-            gifUrl: gifUrl
         });
         return response;
     } catch (error) {
-        return error; 
+        return error;
     }
 }

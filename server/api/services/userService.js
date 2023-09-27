@@ -1,32 +1,31 @@
-const User = require("../models/users")
-const gifNoteService = require("../services/gifNotesService")
-
+const User = require("../models/user");
+const danceNoteService = require("../services/danceNoteService");
 
 exports.getUser = async (id) => {
     try {
         const user = await User.findById(id);
         return user;
     } catch (error) {
-        throw err;  
+        throw err;
     }
-}
+};
 
 exports.saveUser = async (username, categories) => {
     try {
         const user = new User({
             username: username,
-            categories: categories
+            categories: categories,
         });
         const savedUser = await user.save();
         return savedUser;
     } catch (error) {
         throw error;
     }
-}
+};
 
 const propagateCategoryDeletion = async (oldCategories, newCategories) => {
     var hashTable = new Object();
-    
+
     for (const category of newCategories) {
         hashTable[category] = true;
     }
@@ -40,22 +39,24 @@ const propagateCategoryDeletion = async (oldCategories, newCategories) => {
         }
     }
 
-    const gifNotes = await gifNoteService.getGifNotesByCategory(deletedCategory);
+    const danceNotes = await danceNoteService.getDanceNotesByCategory(
+        deletedCategory
+    );
 
-    for (const gifNote of gifNotes) {
-        gifNote.category = "Other";
-        gifNote.save();
+    for (const danceNote of danceNotes) {
+        danceNote.category = "Other";
+        danceNote.save();
     }
-}
+};
 
 const propagateCategoryEdit = async (oldCategories, newCategories) => {
     var hashTable = new Object();
-    
+
     for (const category of newCategories) {
         hashTable[category] = false;
     }
 
-    let oldCategory = ""
+    let oldCategory = "";
     let newCategory = "";
 
     for (const category of oldCategories) {
@@ -72,13 +73,15 @@ const propagateCategoryEdit = async (oldCategories, newCategories) => {
         }
     }
 
-    const gifNotes = await gifNoteService.getGifNotesByCategory(oldCategory);
+    const danceNotes = await danceNoteService.getDanceNotesByCategory(
+        oldCategory
+    );
 
-    for (const gifNote of gifNotes) {
-        gifNote.category = newCategory;
-        gifNote.save();
+    for (const danceNote of danceNotes) {
+        danceNote.category = newCategory;
+        danceNote.save();
     }
-}
+};
 
 exports.updateUser = async (id, username, categories) => {
     try {
@@ -92,11 +95,12 @@ exports.updateUser = async (id, username, categories) => {
             propagateCategoryEdit(user.categories, categories);
         }
 
-        user.categories = categories !== undefined ? categories : user.categories;  
+        user.categories =
+            categories !== undefined ? categories : user.categories;
 
         const savedUser = await user.save();
         return savedUser;
     } catch (error) {
         throw error;
     }
-}
+};
