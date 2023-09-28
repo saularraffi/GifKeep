@@ -15,7 +15,19 @@ const dev = {
     },
 };
 
-const prod = {};
+const prod = {
+    app: {
+        port: parseInt(process.env.DEV_APP_PORT) || 8080,
+        host: "0.0.0.0",
+    },
+    db: {
+        connectionString: "mongodb://0.0.0.0:27017/mybaile",
+        options: {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        },
+    },
+};
 
 const config = {
     dev,
