@@ -2,11 +2,9 @@ import axios from "axios";
 
 const baseUrl = "http://localhost:8080/api/users";
 
-export function getUser() {
-    const userId = localStorage.getItem("userId");
-
+export function getUser(id) {
     try {
-        const response = axios.get(`${baseUrl}?id=${userId}`);
+        const response = axios.get(`${baseUrl}?id=${id}`);
         return response;
     } catch (error) {
         return error;
