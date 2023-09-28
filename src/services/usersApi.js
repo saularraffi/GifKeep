@@ -1,6 +1,7 @@
 import axios from "axios";
+import config from "../config";
 
-const baseUrl = "http://localhost:8080/api/users";
+const baseUrl = `${config.SERVER_URL}/api/users`;
 
 export function getUser(id) {
     try {

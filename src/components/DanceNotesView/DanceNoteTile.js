@@ -13,6 +13,9 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { deleteDanceNote } from "../../services/danceNotesApi";
 import { deleteVideo } from "../../services/videoApi";
+import config from "../../config";
+
+const serverUrl = config.SERVER_URL;
 
 const styles = {
     root: {
@@ -136,7 +139,7 @@ const DanceNoteTile = ({
                     <video
                         controls
                         style={{ width: "100%", height: "215px" }}
-                        src={`http://localhost:8080/api/videos/${id}`}
+                        src={`${serverUrl}/api/videos/${id}`}
                         autoPlay
                     ></video>
                 ) : (
@@ -146,7 +149,7 @@ const DanceNoteTile = ({
                             height: "215px",
                             objectFit: "contain",
                         }}
-                        src={`http://localhost:8080/api/videos/thumbnail/${id}`}
+                        src={`${serverUrl}/api/videos/thumbnail/${id}`}
                         onError={({ currentTarget }) => {
                             currentTarget.onerror = null; // prevents looping
                             currentTarget.src = loadingImg;
