@@ -17,9 +17,9 @@
         "web-vitals": "^2.1.4"
     },
     "scripts": {
-        "start": "TMP_USER_ID=64cd117697db1a3018d79eb7 react-scripts start",
+        "start": "TMP_USER_ID=6513be9bf568a1fcf6194c1f react-scripts start",
         "start-dev": "set REACT_APP_TMP_USER_ID=64cd117697db1a3018d79eb7&& react-scripts start",
-        "build": "TMP_USER_ID=64cd117697db1a3018d79eb7 react-scripts build",
+        "build": "TMP_USER_ID=6513be9bf568a1fcf6194c1f react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
