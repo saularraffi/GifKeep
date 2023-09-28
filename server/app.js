@@ -26,7 +26,7 @@ app.use(videoController);
 mongoose
     .connect(config.db.connectionString, config.db.options)
     .then(() => {
-        console.log("\n[+] MongoDB connection successful");
+        console.log("\n[+] MongoDB connection successfull");
 
         app.listen(config.app.port, config.app.host, () => {
             console.log(
