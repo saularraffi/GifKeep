@@ -11,6 +11,7 @@ function App() {
     const [sharedPopupState, setSharedPopupState] = useState(null);
     const [sharedDrawerState, setSharedDrawerState] = useState(false);
     const [sharedCategoryState, setSharedCategoryState] = useState("");
+    const [userDataLoaded, setUserDataLoaded] = useState(false);
 
     localStorage.setItem("userId", "64cd117697db1a3018d79eb7");
 
@@ -21,6 +22,7 @@ function App() {
                 localStorage.setItem("userId", user._id);
                 localStorage.setItem("username", user.username);
                 localStorage.setItem("categories", user.categories);
+                setUserDataLoaded(true);
             })
             .catch((err) => {
                 console.log(err);
@@ -30,23 +32,25 @@ function App() {
 
     return (
         <>
-            <ThemeProvider theme={theme}>
-                <TopAppBar
-                    setSharedPopupState={setSharedPopupState}
-                    openDrawer={setSharedDrawerState}
-                />
-                <SideDrawer
-                    open={sharedDrawerState}
-                    setOpen={setSharedDrawerState}
-                    setSharedCategoryState={setSharedCategoryState}
-                />
-                <DanceNotesView
-                    sharedPopupState={sharedPopupState}
-                    setSharedPopupState={setSharedPopupState}
-                    sharedCategoryState={sharedCategoryState}
-                    sharedDrawerState={sharedDrawerState}
-                />
-            </ThemeProvider>
+            {userDataLoaded && (
+                <ThemeProvider theme={theme}>
+                    <TopAppBar
+                        setSharedPopupState={setSharedPopupState}
+                        openDrawer={setSharedDrawerState}
+                    />
+                    <SideDrawer
+                        open={sharedDrawerState}
+                        setOpen={setSharedDrawerState}
+                        setSharedCategoryState={setSharedCategoryState}
+                    />
+                    <DanceNotesView
+                        sharedPopupState={sharedPopupState}
+                        setSharedPopupState={setSharedPopupState}
+                        sharedCategoryState={sharedCategoryState}
+                        sharedDrawerState={sharedDrawerState}
+                    />
+                </ThemeProvider>
+            )}
         </>
     );
 }
