@@ -1,6 +1,7 @@
 import axios from "axios";
+import config from "../config";
 
-const baseUrl = "http://localhost:8080/api/videos";
+const baseUrl = `${config.SERVER_URL}/api/videos`;
 
 export function postVideo(noteId, videoFile) {
     try {
