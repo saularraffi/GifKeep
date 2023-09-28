@@ -13,10 +13,10 @@ function App() {
     const [sharedCategoryState, setSharedCategoryState] = useState("");
     const [userDataLoaded, setUserDataLoaded] = useState(false);
 
-    localStorage.setItem("userId", "64cd117697db1a3018d79eb7");
+    const tmpUserId = process.env.REACT_APP_TMP_USER_ID;
 
     useEffect(() => {
-        getUser(localStorage.getItem("userId"))
+        getUser(tmpUserId)
             .then((res) => res.data)
             .then((user) => {
                 localStorage.setItem("userId", user._id);
