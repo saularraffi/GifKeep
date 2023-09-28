@@ -4,16 +4,17 @@ import TopAppBar from "./components/TopAppBar";
 import SideDrawer from "./components/SideDrawer";
 import { ThemeProvider } from "@emotion/react";
 import theme from "./theme";
-import "./App.css";
 import { getUser } from "./services/usersApi";
+import config from "./config";
+import "./App.css";
+
+const tmpUserId = config.TMP_USER_ID;
 
 function App() {
     const [sharedPopupState, setSharedPopupState] = useState(null);
     const [sharedDrawerState, setSharedDrawerState] = useState(false);
     const [sharedCategoryState, setSharedCategoryState] = useState("");
     const [userDataLoaded, setUserDataLoaded] = useState(false);
-
-    const tmpUserId = process.env.REACT_APP_TMP_USER_ID;
 
     useEffect(() => {
         getUser(tmpUserId)
